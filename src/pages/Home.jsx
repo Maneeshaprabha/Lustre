@@ -6,6 +6,7 @@ import LustreHeroMatched from './HeroPage';
 import BrandMarquee from './BrandMarquee';
 import CollectionSection from './CollectionSection';
 import NewArrivals from './NewArrivals';
+import ChooseUsSection from './ChooseUsSection';
 
 const Homepage = () => {
   
@@ -15,6 +16,7 @@ const Homepage = () => {
   <BrandMarquee />
   <CollectionSection/>
   <NewArrivals/>
+  <ChooseUsSection/>
     </>
   );
 };
