@@ -10,6 +10,7 @@ import ChooseUsSection from './ChooseUsSection';
 import PromoBanner from './PromoBanner';
 import Newsletter from './Newsletter';
 import CustomerSupport from './CustomerSupport';
+import Footer from './Footer';
 
 const Homepage = () => {
   
@@ -23,6 +24,7 @@ const Homepage = () => {
   <PromoBanner/>
   <Newsletter/>
   <CustomerSupport/>
+  
     </>
   );
 };

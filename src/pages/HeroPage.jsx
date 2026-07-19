@@ -25,7 +25,7 @@ const LustreHeroMatched = () => {
 
   return (
     <>
-   <Navbar />
+
     <div className="min-h-screen w-full bg-white text-[#1A1A1A] font-sans antialiased overflow-hidden flex items-center">
       
       <main className="max-w-[1400px] w-full mx-auto px-6 md:px-12 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
