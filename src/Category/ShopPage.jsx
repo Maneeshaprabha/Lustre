@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ChevronDown, ChevronRight, Star, SlidersHorizontal, ArrowLeft, ArrowRight, ShoppingBag } from 'lucide-react';
+import Recommendations from './Recommendations';
+import NewCollectionBanner from './NewCollectionBanner';
+import LustreFeatureCard from './LustreFeatureCard';
 
 const ShopPage = () => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
@@ -76,6 +79,7 @@ const ShopPage = () => {
   };
 
   return (
+    <>
     <div className="min-h-screen w-full bg-white font-sans text-[#1A1A1A] antialiased pb-24">
       
       {/* 1. HERO SECTION (Massive Typography Over Image) */}
@@ -272,6 +276,11 @@ const ShopPage = () => {
         </div>
       </div>
     </div>
+
+   <Recommendations/>
+   <NewCollectionBanner/>
+   <LustreFeatureCard/>
+    </>
   );
 };
 
