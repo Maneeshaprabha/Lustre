@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Edit } from 'lucide-react';
 import EditorialFeature from './EditorialFeature';
+import LustreFeatureCard from './LustreFeatureCard';
 
 const CategorySection = () => {
   const categories = [
@@ -121,6 +122,7 @@ const CategorySection = () => {
       </div>
 
       <EditorialFeature />
+      <LustreFeatureCard/>
     </section>
   );
 };
