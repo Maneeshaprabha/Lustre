@@ -7,6 +7,7 @@ import BrandMarquee from './BrandMarquee';
 import CollectionSection from './CollectionSection';
 import NewArrivals from './NewArrivals';
 import ChooseUsSection from './ChooseUsSection';
+import PromoBanner from './PromoBanner';
 
 const Homepage = () => {
   
@@ -17,6 +18,7 @@ const Homepage = () => {
   <CollectionSection/>
   <NewArrivals/>
   <ChooseUsSection/>
+  <PromoBanner/>
     </>
   );
 };
