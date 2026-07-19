@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { Edit } from 'lucide-react';
+import EditorialFeature from './EditorialFeature';
 
 const CategorySection = () => {
   const categories = [
@@ -117,6 +119,8 @@ const CategorySection = () => {
         </motion.div>
 
       </div>
+
+      <EditorialFeature />
     </section>
   );
 };
