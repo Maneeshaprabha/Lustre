@@ -9,6 +9,7 @@ import NewArrivals from './NewArrivals';
 import ChooseUsSection from './ChooseUsSection';
 import PromoBanner from './PromoBanner';
 import Newsletter from './Newsletter';
+import CustomerSupport from './CustomerSupport';
 
 const Homepage = () => {
   
@@ -21,6 +22,7 @@ const Homepage = () => {
   <ChooseUsSection/>
   <PromoBanner/>
   <Newsletter/>
+  <CustomerSupport/>
     </>
   );
 };
