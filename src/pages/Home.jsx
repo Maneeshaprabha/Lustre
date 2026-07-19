@@ -8,6 +8,7 @@ import CollectionSection from './CollectionSection';
 import NewArrivals from './NewArrivals';
 import ChooseUsSection from './ChooseUsSection';
 import PromoBanner from './PromoBanner';
+import Newsletter from './Newsletter';
 
 const Homepage = () => {
   
@@ -19,6 +20,7 @@ const Homepage = () => {
   <NewArrivals/>
   <ChooseUsSection/>
   <PromoBanner/>
+  <Newsletter/>
     </>
   );
 };
