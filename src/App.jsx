@@ -10,6 +10,7 @@ import WomenswearPage from './Category/WomenswearPage';
 import MenswearPage from './Category/MenswearPage';
 import KidsPage from './Category/KidsPage';
 import AccessoriesPage from './Category/AccessoriesPage';
+import CollectionPage from './Category/CollectionPage';
 
 function App() {
   return (
@@ -18,11 +19,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path ="/shop" element={<CategorySection />} />
-        <Route path="/collections" element={<ShopPage/>} />
+        <Route path="/shop/all" element={<ShopPage/>} />
         <Route path="/shop/womenswear" element={<WomenswearPage />} />
           <Route path="/shop/menswear" element={<MenswearPage />} />
             <Route path="/shop/kids" element={<KidsPage />} />
               <Route path="/shop/accessories" element={<AccessoriesPage />} />
+              <Route path="/collections" element={<CollectionPage />} />
 
       </Routes>
       <Footer/>
