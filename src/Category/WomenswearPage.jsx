@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SlidersHorizontal, ChevronDown, Plus } from 'lucide-react';
-import { Link } from 'react-router-dom'; // or 'next/link' if using Next.js
+import { Link } from 'react-router-dom'; 
 
 const WomenswearPage = () => {
   const [isHovered, setIsHovered] = useState(null);
@@ -147,56 +147,65 @@ const WomenswearPage = () => {
             <motion.div 
               key={product.id}
               variants={itemVariants}
-              className="group flex flex-col cursor-pointer"
+              className="group flex flex-col cursor-pointer relative"
               onMouseEnter={() => setIsHovered(product.id)}
               onMouseLeave={() => setIsHovered(null)}
             >
               
-              {/* Product Image Container */}
-              <div className="relative w-full aspect-[3/4] bg-[#E9E3DB]/30 overflow-hidden mb-5">
-                
-                {product.isNew && (
-                  <span className="absolute top-4 left-4 bg-white text-[#1A1A1A] px-3 py-1 text-[9px] font-black tracking-widest uppercase z-10 shadow-sm">
-                    New
-                  </span>
-                )}
-
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 mix-blend-multiply"
-                />
-
-                {/* Quick Add Overlay */}
-                <AnimatePresence>
-                  {isHovered === product.id && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute inset-x-4 bottom-4 z-20"
-                    >
-                      <button className="w-full bg-[#1A1A1A] text-white py-3.5 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#1A1A1A] transition-colors shadow-lg">
-                        <Plus size={16} /> Quick Add
-                      </button>
-                    </motion.div>
+              {/* Wrapping the entire card content in a Link to the PDP */}
+              <Link to={`/product/${product.id}`} className="block w-full">
+                {/* Product Image Container */}
+                <div className="relative w-full aspect-[3/4] bg-[#E9E3DB]/30 overflow-hidden mb-5">
+                  
+                  {product.isNew && (
+                    <span className="absolute top-4 left-4 bg-white text-[#1A1A1A] px-3 py-1 text-[9px] font-black tracking-widest uppercase z-10 shadow-sm">
+                      New
+                    </span>
                   )}
-                </AnimatePresence>
-                
-                {/* Subtle gradient for Quick Add visibility */}
-                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1A1A1A]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              </div>
 
-              {/* Product Details */}
-              <div className="flex flex-col gap-1.5 px-1">
-                <h3 className="text-sm font-bold text-[#1A1A1A] leading-tight group-hover:text-[#1A1A1A]/60 transition-colors">
-                  {product.name}
-                </h3>
-                <span className="text-sm font-medium text-[#1A1A1A]/70">
-                  ${product.price}
-                </span>
-              </div>
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 mix-blend-multiply"
+                  />
+                  
+                  {/* Subtle gradient for Quick Add visibility */}
+                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1A1A1A]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </div>
+
+                {/* Product Details */}
+                <div className="flex flex-col gap-1.5 px-1">
+                  <h3 className="text-sm font-bold text-[#1A1A1A] leading-tight group-hover:text-[#1A1A1A]/60 transition-colors">
+                    {product.name}
+                  </h3>
+                  <span className="text-sm font-medium text-[#1A1A1A]/70">
+                    ${product.price}
+                  </span>
+                </div>
+              </Link>
+
+              {/* Quick Add Overlay (Placed outside the Link to prevent conflict) */}
+              <AnimatePresence>
+                {isHovered === product.id && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-x-4 bottom-[65px] z-20" // Positioned above the text
+                  >
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault(); // This stops the Link from triggering when clicking Quick Add
+                        console.log(`Added ${product.name} to cart`);
+                      }}
+                      className="w-full bg-[#1A1A1A] text-white py-3.5 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#1A1A1A] transition-colors shadow-lg"
+                    >
+                      <Plus size={16} /> Quick Add
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
             </motion.div>
           ))}
