@@ -1,18 +1,49 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SlidersHorizontal, ChevronDown, Plus, Search, Check, ArrowLeft, ArrowRight, X } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown, Plus, Search, Check, ArrowLeft, ArrowRight, X, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-
-// Import your bottom components
 import Recommendations from './Recommendations';
+
+// --- CUSTOM GRID ICON COMPONENT ---
+const GridIcon = ({ type, isActive, onClick }) => {
+  const color = isActive ? "#1A1A1A" : "#C4BEB6"; 
+  
+  if (type === 'list') {
+    return (
+      <button onClick={onClick} className="flex flex-col gap-1 p-1 hover:opacity-70 transition-opacity" aria-label="List View">
+        <div className="flex items-center gap-1">
+          <div className="w-[4px] h-[4px] rounded-full" style={{ backgroundColor: color }} />
+          <div className="w-3 h-[2px]" style={{ backgroundColor: color }} />
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-[4px] h-[4px] rounded-full" style={{ backgroundColor: color }} />
+          <div className="w-3 h-[2px]" style={{ backgroundColor: color }} />
+        </div>
+      </button>
+    );
+  }
+  
+  const cols = Array.from({ length: type });
+  return (
+    <button onClick={onClick} className="flex flex-col gap-1 p-1 hover:opacity-70 transition-opacity" aria-label={`${type} Columns`}>
+      <div className="flex gap-1">
+        {cols.map((_, i) => <div key={i} className="w-[4px] h-[4px] rounded-full" style={{ backgroundColor: color }} />)}
+      </div>
+      <div className="flex gap-1">
+        {cols.map((_, i) => <div key={i} className="w-[4px] h-[4px] rounded-full" style={{ backgroundColor: color }} />)}
+      </div>
+    </button>
+  );
+};
 
 const AccessoriesPage = () => {
   const [isHovered, setIsHovered] = useState(null);
   const navigate = useNavigate();
 
-  // --- Layout Visibility States ---
-  const [showDesktopFilters, setShowDesktopFilters] = useState(true); 
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false); 
+  // --- Layout Visibility & Grid States ---
+  const [showDesktopFilters, setShowDesktopFilters] = useState(true);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [gridView, setGridView] = useState(3); // Default to 3 columns
 
   // Filter Toggle States
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
@@ -29,14 +60,14 @@ const AccessoriesPage = () => {
   const [sortOption, setSortOption] = useState('Featured');
 
   const products = [
-    { id: 1, name: "Signature Leather Tote", price: "450.00", priceNumber: 450, category: "Bags & Totes", colorHex: "#8B4513", collections: ["New Arrival"], image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800&auto=format&fit=crop", isNew: true },
-    { id: 2, name: "Acetate Sunglasses", price: "220.00", priceNumber: 220, category: "Sunglasses", colorHex: "#1A1A1A", collections: [], image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800&auto=format&fit=crop", isNew: false },
-    { id: 3, name: "Woven Silk Scarf", price: "130.00", priceNumber: 130, category: "Scarves", colorHex: "#E9E3DB", collections: [], image: "https://images.unsplash.com/photo-1584030373081-f37b7bb4fa8e?q=80&w=800&auto=format&fit=crop", isNew: false },
-    { id: 4, name: "Classic Leather Belt", price: "110.00", priceNumber: 110, category: "Belts", colorHex: "#1A1A1A", collections: ["New Arrival"], image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop", isNew: true },
-    { id: 5, name: "Structured Crossbody", price: "320.00", priceNumber: 320, category: "Bags & Totes", colorHex: "#1A1A1A", collections: ["Best Seller"], image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?q=80&w=800&auto=format&fit=crop", isNew: false },
-    { id: 6, name: "Gold Vermeil Cuff", price: "195.00", priceNumber: 195, category: "Jewelry", colorHex: "#D4AF37", collections: ["Limited Edition"], image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop", isNew: false },
-    { id: 7, name: "Cashmere Beanie", price: "95.00", priceNumber: 95, category: "Accessories", colorHex: "#C0C0C0", collections: ["New Arrival"], image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=800&auto=format&fit=crop", isNew: true },
-    { id: 8, name: "Leather Cardholder", price: "85.00", priceNumber: 85, category: "Small Leather Goods", colorHex: "#8B4513", collections: ["Best Seller"], image: "https://images.unsplash.com/photo-1627123424574-724758594e93?q=80&w=800&auto=format&fit=crop", isNew: false }
+    { id: 1, name: "Signature Leather Tote", price: "450.00", priceNumber: 450, category: "Bags & Totes", colorHex: "#8B4513", collections: ["New Arrival"], image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 5.0, reviews: 24 },
+    { id: 2, name: "Acetate Sunglasses", price: "220.00", priceNumber: 220, category: "Sunglasses", colorHex: "#1A1A1A", collections: [], image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800&auto=format&fit=crop", isNew: false, rating: 4.8, reviews: 56 },
+    { id: 3, name: "Woven Silk Scarf", price: "130.00", priceNumber: 130, category: "Scarves", colorHex: "#E9E3DB", collections: [], image: "https://images.unsplash.com/photo-1584030373081-f37b7bb4fa8e?q=80&w=800&auto=format&fit=crop", isNew: false, rating: 4.9, reviews: 88 },
+    { id: 4, name: "Classic Leather Belt", price: "110.00", priceNumber: 110, category: "Belts", colorHex: "#1A1A1A", collections: ["New Arrival"], image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 4.7, reviews: 42 },
+    { id: 5, name: "Structured Crossbody", price: "320.00", priceNumber: 320, category: "Bags & Totes", colorHex: "#1A1A1A", collections: ["Best Seller"], image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?q=80&w=800&auto=format&fit=crop", isNew: false, rating: 5.0, reviews: 115 },
+    { id: 6, name: "Gold Vermeil Cuff", price: "195.00", priceNumber: 195, category: "Jewelry", colorHex: "#D4AF37", collections: ["Limited Edition"], image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop", isNew: false, rating: 4.9, reviews: 31 },
+    { id: 7, name: "Cashmere Beanie", price: "95.00", priceNumber: 95, category: "Accessories", colorHex: "#C0C0C0", collections: ["New Arrival"], image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 4.8, reviews: 67 },
+    { id: 8, name: "Leather Cardholder", price: "85.00", priceNumber: 85, category: "Small Leather Goods", colorHex: "#8B4513", collections: ["Best Seller"], image: "https://images.unsplash.com/photo-1627123424574-724758594e93?q=80&w=800&auto=format&fit=crop", isNew: false, rating: 4.7, reviews: 198 }
   ];
 
   // --- FILTERING LOGIC ---
@@ -57,7 +88,7 @@ const AccessoriesPage = () => {
     if (sortOption === 'Price: Low to High') return a.priceNumber - b.priceNumber;
     if (sortOption === 'Price: High to Low') return b.priceNumber - a.priceNumber;
     if (sortOption === 'Newest') return (a.isNew === b.isNew) ? 0 : a.isNew ? -1 : 1;
-    return 0; // Featured
+    return 0; // Featured (Default)
   });
 
   const toggleCollection = (collection) => {
@@ -67,6 +98,15 @@ const AccessoriesPage = () => {
   const toggleColor = (color) => {
     setActiveColors(prev => prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]);
   };
+
+  // Grid dynamic classes setup
+  const gridColsClass = 
+    gridView === 'list' ? 'grid-cols-1' :
+    gridView === 2 ? 'lg:grid-cols-2' :
+    gridView === 3 ? 'lg:grid-cols-3' :
+    gridView === 4 ? 'lg:grid-cols-4' :
+    gridView === 5 ? 'lg:grid-cols-5' :
+    'lg:grid-cols-6';
 
   const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
   const itemVariants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] } } };
@@ -192,20 +232,42 @@ const AccessoriesPage = () => {
                 <span className="mx-3">/</span>
                 <span className="text-[#1A1A1A]">Accessories</span>
               </nav>
-              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter uppercase leading-[0.9] mb-6 text-[#1A1A1A]">
+
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.8, ease: "easeOut" }} 
+                className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter uppercase leading-[0.9] mb-6 text-[#1A1A1A]"
+              >
                 The <br className="hidden md:block"/> Details.
               </motion.h1>
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.8 }} className="max-w-md text-sm md:text-base text-[#1A1A1A]/70 font-medium leading-relaxed">
+
+              <motion.p 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: 0.3, duration: 0.8 }} 
+                className="max-w-md text-sm md:text-base text-[#1A1A1A]/70 font-medium leading-relaxed"
+              >
                 Handcrafted leather goods, timeless eyewear, and subtle architectural accents engineered to define and complete the Lustre aesthetic.
               </motion.p>
             </div>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 1, ease: "easeOut" }} className="hidden md:block w-full md:w-1/2 lg:w-2/5 aspect-[4/3] bg-[#E9E3DB] overflow-hidden rounded-none">
-              <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?q=80&w=1200&auto=format&fit=crop" alt="Luxury Accessories" className="w-full h-full object-cover grayscale-[15%] hover:scale-105 transition-transform duration-1000" />
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }} 
+              animate={{ opacity: 1, scale: 1 }} 
+              transition={{ delay: 0.2, duration: 1, ease: "easeOut" }}
+              className="hidden md:block w-full md:w-1/2 lg:w-2/5 aspect-[4/3] bg-[#E9E3DB] overflow-hidden rounded-none"
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1591561954557-26941169b49e?q=80&w=1200&auto=format&fit=crop" 
+                alt="Luxury Accessories Feature" 
+                className="w-full h-full object-cover grayscale-[15%] hover:scale-105 transition-transform duration-1000"
+              />
             </motion.div>
           </div>
         </section>
 
-        {/* 2. STICKY FILTER & SORT BAR */}
+        {/* 2. STICKY FILTER, VIEW TOGGLES & SORT BAR */}
         <div className="sticky top-[88px] z-30 w-full bg-white border-y border-[#E9E3DB] px-6 md:px-12 py-5 flex justify-between items-center transition-all">
           <div className="max-w-[1500px] mx-auto w-full flex justify-between items-center">
             
@@ -225,8 +287,19 @@ const AccessoriesPage = () => {
               <SlidersHorizontal size={16} strokeWidth={2} /> Filters
             </button>
             
-            {/* Right Side: Count & Sort Dropdown */}
+            {/* Right Side: Grid Toggles, Count & Sort Dropdown */}
             <div className="flex items-center gap-6 md:gap-10 text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase">
+              
+              {/* GRID VIEW TOGGLES */}
+              <div className="hidden lg:flex items-center gap-4 mr-4">
+                <GridIcon type="list" isActive={gridView === 'list'} onClick={() => setGridView('list')} />
+                <GridIcon type={2} isActive={gridView === 2} onClick={() => setGridView(2)} />
+                <GridIcon type={3} isActive={gridView === 3} onClick={() => setGridView(3)} />
+                <GridIcon type={4} isActive={gridView === 4} onClick={() => setGridView(4)} />
+                <GridIcon type={5} isActive={gridView === 5} onClick={() => setGridView(5)} />
+                <GridIcon type={6} isActive={gridView === 6} onClick={() => setGridView(6)} />
+              </div>
+
               <span className="text-[#1A1A1A]/40 hidden sm:block">
                 {sortedProducts.length} Products
               </span>
@@ -251,6 +324,7 @@ const AccessoriesPage = () => {
                 </AnimatePresence>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -286,7 +360,7 @@ const AccessoriesPage = () => {
           )}
         </AnimatePresence>
 
-        {/* 3. MAIN LAYOUT (Sidebar + Grid) */}
+        {/* 3. MAIN LAYOUT (Sidebar + Grid/List) */}
         <main className={`max-w-[1500px] mx-auto px-6 md:px-12 grid grid-cols-1 ${showDesktopFilters ? 'lg:grid-cols-4' : 'lg:grid-cols-1'} gap-10 mt-12 md:mt-20 pb-24 transition-all duration-500`}>
           
           {/* DESKTOP SIDEBAR */}
@@ -321,31 +395,83 @@ const AccessoriesPage = () => {
             ) : (
               <motion.div 
                 variants={containerVariants} initial="hidden" animate="visible" 
-                className={`grid grid-cols-1 sm:grid-cols-2 ${showDesktopFilters ? 'lg:grid-cols-3' : 'lg:grid-cols-4'} gap-x-6 gap-y-16 transition-all duration-500`}
+                className={`grid ${gridView === 'list' ? 'grid-cols-1' : `grid-cols-1 sm:grid-cols-2 ${gridColsClass}`} gap-x-6 gap-y-16 transition-all duration-500`}
               >
                 {sortedProducts.map((product) => (
-                  <motion.div key={product.id} variants={itemVariants} className="group flex flex-col relative" onMouseEnter={() => setIsHovered(product.id)} onMouseLeave={() => setIsHovered(null)}>
-                    <Link to={`/product/${product.id}`} className="block w-full cursor-pointer">
-                      <div className="relative w-full aspect-[3/4] bg-[#E9E3DB]/30 overflow-hidden mb-5">
-                        {product.isNew && <span className="absolute top-4 left-4 bg-white text-[#1A1A1A] px-3 py-1 text-[9px] font-black tracking-widest uppercase z-10 shadow-sm">New</span>}
+                  <motion.div 
+                    key={product.id} 
+                    variants={itemVariants} 
+                    className={`group cursor-pointer relative ${gridView === 'list' ? 'flex flex-row gap-8 items-center border-b border-[#C4BEB6]/30 pb-8' : 'flex flex-col'}`}
+                    onMouseEnter={() => setIsHovered(product.id)} 
+                    onMouseLeave={() => setIsHovered(null)}
+                  >
+                    
+                    <Link to={`/product/${product.id}`} className={`block ${gridView === 'list' ? 'flex flex-row w-full gap-8 items-center' : 'w-full'}`}>
+                      {/* Image Container */}
+                      <div className={`relative bg-[#E9E3DB]/30 overflow-hidden rounded-none ${gridView === 'list' ? 'w-[200px] shrink-0 aspect-[3/4] mb-0' : 'w-full aspect-[3/4] mb-5'}`}>
+                        {product.isNew && <span className="absolute top-4 left-4 bg-white text-[#1A1A1A] px-3 py-1 text-[9px] font-black tracking-widest uppercase z-10 shadow-sm rounded-none">New</span>}
                         <img src={product.image} alt={product.name} className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 mix-blend-multiply" />
                         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1A1A1A]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                       </div>
-                      <div className="flex flex-col gap-1.5 px-1">
-                        <h3 className="text-sm font-bold text-[#1A1A1A] leading-tight group-hover:text-[#1A1A1A]/60 transition-colors">{product.name}</h3>
-                        <span className="text-sm font-medium text-[#1A1A1A]/70">${product.price}</span>
+                      
+                      {/* Details Section */}
+                      <div className={`flex flex-col px-1 ${gridView === 'list' ? 'flex-1' : 'gap-1.5'}`}>
+                        
+                        {gridView === 'list' && (
+                          <span className="text-[10px] font-bold tracking-widest uppercase text-[#1A1A1A]/50 mb-2">{product.category}</span>
+                        )}
+                        
+                        <div className="flex justify-between items-start gap-4">
+                          <h3 className={`${gridView >= 5 && gridView !== 'list' ? 'text-xs' : gridView === 'list' ? 'text-2xl' : 'text-sm'} font-bold text-[#1A1A1A] leading-tight group-hover:text-[#1A1A1A]/60 transition-colors`}>
+                            {product.name}
+                          </h3>
+                          {gridView !== 'list' && (
+                            <span className={`${gridView >= 5 ? 'text-xs' : 'text-sm'} font-medium text-[#1A1A1A] shrink-0`}>${product.price}</span>
+                          )}
+                        </div>
+                        
+                        {/* Rating */}
+                        {gridView !== 'list' && (
+                           <div className="flex items-center gap-1.5 text-[11px] text-[#1A1A1A]/50 font-medium uppercase tracking-wider mt-1">
+                             <Star size={12} className="fill-[#C4BEB6] text-[#C4BEB6]" />
+                             <span>{product.rating || "5.0"}</span> 
+                           </div>
+                        )}
+
+                        {/* List View Additional Elements */}
+                        {gridView === 'list' && (
+                          <>
+                            <span className="text-xl font-medium text-[#1A1A1A] mt-2">${product.price}</span>
+                            <p className="text-sm text-[#1A1A1A]/60 mt-4 max-w-xl leading-relaxed">
+                              A meticulously crafted accessory designed for the modern lifestyle. The {product.name} blends functional elegance with premium materials and signature Lustre details.
+                            </p>
+                          </>
+                        )}
                       </div>
                     </Link>
 
-                    <AnimatePresence>
-                      {isHovered === product.id && (
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} transition={{ duration: 0.3 }} className="absolute inset-x-4 bottom-[60px] z-20 pointer-events-auto">
-                          <button onClick={(e) => { e.preventDefault(); navigate(`/product/${product.id}`); }} className="w-full bg-[#1A1A1A] text-white py-3.5 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#1A1A1A] transition-colors shadow-lg">
-                            <Plus size={16} /> Quick Add
-                          </button>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    {/* Quick Add Buttons */}
+                    {gridView === 'list' ? (
+                       // Button shown inline for List View
+                       <button 
+                         onClick={(e) => { e.preventDefault(); navigate(`/product/${product.id}`); }}
+                         className="absolute right-0 bottom-8 shrink-0 px-8 bg-[#1A1A1A] text-white py-3.5 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#1A1A1A] transition-colors shadow-lg rounded-none border border-[#1A1A1A]"
+                       >
+                         <Plus size={16} /> Quick Add
+                       </button>
+                    ) : (
+                      // Overlay Button for Grid Views
+                      <AnimatePresence>
+                        {isHovered === product.id && (
+                          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} transition={{ duration: 0.3 }} className="absolute inset-x-4 bottom-[65px] z-20 pointer-events-auto">
+                            <button onClick={(e) => { e.preventDefault(); navigate(`/product/${product.id}`); }} className="w-full bg-[#1A1A1A] text-white py-3.5 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#1A1A1A] transition-colors shadow-lg rounded-none border border-transparent hover:border-[#1A1A1A]">
+                              {gridView >= 5 ? <Plus size={16} /> : <><Plus size={16} /> Quick Add</>}
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    )}
+
                   </motion.div>
                 ))}
               </motion.div>
@@ -370,7 +496,6 @@ const AccessoriesPage = () => {
         </main>
       </div>
 
-      {/* Adding Recommendations at the bottom as requested */}
       <Recommendations />
     </>
   );

@@ -1,39 +1,44 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { Edit } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Add Link import
 import EditorialFeature from './EditorialFeature';
 import LustreFeatureCard from './LustreFeatureCard';
 
 const CategorySection = () => {
+  // Added "link" property to each category to define the route
   const categories = [
     {
       title: "Womenswear",
       subtitle: "The Summer Edit",
       image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1000&auto=format&fit=crop",
       colSpan: "md:col-span-6 lg:col-span-5",
-      aspect: "aspect-[3/4] md:aspect-[4/5]"
+      aspect: "aspect-[3/4] md:aspect-[4/5]",
+      link: "/shop/womenswear"
     },
     {
       title: "Menswear",
       subtitle: "Modern Tailoring",
       image: "https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=1000&auto=format&fit=crop",
       colSpan: "md:col-span-6 lg:col-span-7",
-      aspect: "aspect-[3/4] md:aspect-[16/9]"
+      aspect: "aspect-[3/4] md:aspect-[16/9]",
+      link: "/shop/menswear"
     },
     {
       title: "Accessories",
       subtitle: "The Finishing Touch",
       image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop",
       colSpan: "md:col-span-6 lg:col-span-7",
-      aspect: "aspect-[3/4] md:aspect-[16/9]"
+      aspect: "aspect-[3/4] md:aspect-[16/9]",
+      link: "/shop/accessories"
     },
     {
       title: "Kids",
       subtitle: "Playful Elegance",
       image: "https://images.unsplash.com/photo-1519238396246-be760086221c?q=80&w=1000&auto=format&fit=crop",
       colSpan: "md:col-span-6 lg:col-span-5",
-      aspect: "aspect-[3/4] md:aspect-[4/5]"
+      aspect: "aspect-[3/4] md:aspect-[4/5]",
+      link: "/shop/kids"
     }
   ];
 
@@ -51,7 +56,6 @@ const CategorySection = () => {
   };
 
   return (
-   
     <section id="categories" className="w-full bg-white py-24 px-6 md:px-12 font-sans antialiased">
       <div className="max-w-[1400px] mx-auto">
         
@@ -86,6 +90,9 @@ const CategorySection = () => {
               variants={itemVariants}
               className={`${category.colSpan} relative group cursor-pointer overflow-hidden bg-[#E9E3DB]`}
             >
+              {/* Navigate to the specific category route when clicked */}
+              <Link to={category.link} className="absolute inset-0 z-20" aria-label={`Shop ${category.title}`} />
+              
               {/* Image with subtle zoom on hover */}
               <div className={`w-full ${category.aspect} overflow-hidden`}>
                 <img 
@@ -96,10 +103,10 @@ const CategorySection = () => {
               </div>
 
               {/* Dark Gradient Overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/80 via-[#1A1A1A]/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/80 via-[#1A1A1A]/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none" />
 
               {/* Text Content */}
-              <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-end">
+              <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-end pointer-events-none z-10">
                 <p className="text-[#E9E3DB]/80 text-xs md:text-sm font-medium tracking-widest uppercase mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                   {category.subtitle}
                 </p>

@@ -8,13 +8,46 @@ import Recommendations from './Recommendations';
 import NewCollectionBanner from './NewCollectionBanner';
 import LustreFeatureCard from './LustreFeatureCard';
 
+// --- CUSTOM GRID ICON COMPONENT ---
+const GridIcon = ({ type, isActive, onClick }) => {
+  const color = isActive ? "#1A1A1A" : "#C4BEB6"; 
+  
+  if (type === 'list') {
+    return (
+      <button onClick={onClick} className="flex flex-col gap-1 p-1 hover:opacity-70 transition-opacity" aria-label="List View">
+        <div className="flex items-center gap-1">
+          <div className="w-[4px] h-[4px] rounded-full" style={{ backgroundColor: color }} />
+          <div className="w-3 h-[2px]" style={{ backgroundColor: color }} />
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-[4px] h-[4px] rounded-full" style={{ backgroundColor: color }} />
+          <div className="w-3 h-[2px]" style={{ backgroundColor: color }} />
+        </div>
+      </button>
+    );
+  }
+  
+  const cols = Array.from({ length: type });
+  return (
+    <button onClick={onClick} className="flex flex-col gap-1 p-1 hover:opacity-70 transition-opacity" aria-label={`${type} Columns`}>
+      <div className="flex gap-1">
+        {cols.map((_, i) => <div key={i} className="w-[4px] h-[4px] rounded-full" style={{ backgroundColor: color }} />)}
+      </div>
+      <div className="flex gap-1">
+        {cols.map((_, i) => <div key={i} className="w-[4px] h-[4px] rounded-full" style={{ backgroundColor: color }} />)}
+      </div>
+    </button>
+  );
+};
+
 const ShopPage = () => {
   const [isHovered, setIsHovered] = useState(null);
   const navigate = useNavigate();
 
-  // --- Layout Visibility States ---
+  // --- Layout Visibility & Grid States ---
   const [showDesktopFilters, setShowDesktopFilters] = useState(true);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [gridView, setGridView] = useState(3); // Default to 3 columns
 
   // Filter Toggle States
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
@@ -30,7 +63,7 @@ const ShopPage = () => {
   const [activePrice, setActivePrice] = useState(null);
   const [sortOption, setSortOption] = useState('Featured');
 
-  // Updated products with filterable data (priceNumber, category, colorHex, collections)
+  // Updated products with filterable data
   const products = [
     { id: 1, name: "Structured Wool Coat", price: "299.90", priceNumber: 299.90, category: "Outerwear", colorHex: "#1A1A1A", collections: ["New Arrival"], image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 5.0, reviews: '1.2k' },
     { id: 2, name: "Silk Slip Dress", price: "120.00", priceNumber: 120, category: "Dresses", colorHex: "#E9E3DB", collections: ["Best Seller"], image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop", isNew: false, rating: 4.8, reviews: '850' },
@@ -68,6 +101,15 @@ const ShopPage = () => {
   const toggleColor = (color) => {
     setActiveColors(prev => prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]);
   };
+
+  // Grid dynamic classes setup
+  const gridColsClass = 
+    gridView === 'list' ? 'grid-cols-1' :
+    gridView === 2 ? 'lg:grid-cols-2' :
+    gridView === 3 ? 'lg:grid-cols-3' :
+    gridView === 4 ? 'lg:grid-cols-4' :
+    gridView === 5 ? 'lg:grid-cols-5' :
+    'lg:grid-cols-6';
 
   const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
   const itemVariants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] } } };
@@ -189,7 +231,7 @@ const ShopPage = () => {
               <nav className="text-[10px] md:text-xs font-bold tracking-[0.2em] text-[#C4BEB6] uppercase mb-10">
                 <Link to="/" className="hover:text-[#1A1A1A] transition-colors">Home</Link>
                 <span className="mx-3">/</span>
-                <span className="text-[#1A1A1A]">Shop</span>
+                <span className="text-[#1A1A1A]">Shop All</span>
               </nav>
               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter uppercase leading-[0.9] mb-6 text-[#1A1A1A]">
                 Curated <br className="hidden md:block"/> Style.
@@ -204,7 +246,7 @@ const ShopPage = () => {
           </div>
         </section>
 
-        {/* 2. STICKY FILTER & SORT BAR */}
+        {/* 2. STICKY FILTER, VIEW TOGGLES & SORT BAR */}
         <div className="sticky top-[88px] z-30 w-full bg-white border-y border-[#E9E3DB] px-6 md:px-12 py-5 flex justify-between items-center transition-all">
           <div className="max-w-[1500px] mx-auto w-full flex justify-between items-center">
             
@@ -224,8 +266,19 @@ const ShopPage = () => {
               <SlidersHorizontal size={16} strokeWidth={2} /> Filters
             </button>
             
-            {/* Right Side: Count & Sort Dropdown */}
+            {/* Right Side: Grid Toggles, Count & Sort Dropdown */}
             <div className="flex items-center gap-6 md:gap-10 text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase">
+              
+              {/* GRID VIEW TOGGLES */}
+              <div className="hidden lg:flex items-center gap-4 mr-4">
+                <GridIcon type="list" isActive={gridView === 'list'} onClick={() => setGridView('list')} />
+                <GridIcon type={2} isActive={gridView === 2} onClick={() => setGridView(2)} />
+                <GridIcon type={3} isActive={gridView === 3} onClick={() => setGridView(3)} />
+                <GridIcon type={4} isActive={gridView === 4} onClick={() => setGridView(4)} />
+                <GridIcon type={5} isActive={gridView === 5} onClick={() => setGridView(5)} />
+                <GridIcon type={6} isActive={gridView === 6} onClick={() => setGridView(6)} />
+              </div>
+
               <span className="text-[#1A1A1A]/40 hidden sm:block">
                 {sortedProducts.length} Products
               </span>
@@ -250,6 +303,7 @@ const ShopPage = () => {
                 </AnimatePresence>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -285,7 +339,7 @@ const ShopPage = () => {
           )}
         </AnimatePresence>
 
-        {/* 3. MAIN LAYOUT (Sidebar + Grid) */}
+        {/* 3. MAIN LAYOUT (Sidebar + Grid/List) */}
         <main className={`max-w-[1500px] mx-auto px-6 md:px-12 grid grid-cols-1 ${showDesktopFilters ? 'lg:grid-cols-4' : 'lg:grid-cols-1'} gap-10 mt-12 md:mt-20 pb-24 transition-all duration-500`}>
           
           {/* DESKTOP SIDEBAR */}
@@ -320,40 +374,84 @@ const ShopPage = () => {
             ) : (
               <motion.div 
                 variants={containerVariants} initial="hidden" animate="visible" 
-                className={`grid grid-cols-1 sm:grid-cols-2 ${showDesktopFilters ? 'lg:grid-cols-3' : 'lg:grid-cols-4'} gap-x-6 gap-y-16 transition-all duration-500`}
+                className={`grid ${gridView === 'list' ? 'grid-cols-1' : `grid-cols-1 sm:grid-cols-2 ${gridColsClass}`} gap-x-6 gap-y-16 transition-all duration-500`}
               >
                 {sortedProducts.map((product) => (
-                  <motion.div key={product.id} variants={itemVariants} className="group flex flex-col relative" onMouseEnter={() => setIsHovered(product.id)} onMouseLeave={() => setIsHovered(null)}>
+                  <motion.div 
+                    key={product.id} 
+                    variants={itemVariants} 
+                    className={`group cursor-pointer relative ${gridView === 'list' ? 'flex flex-row gap-8 items-center border-b border-[#C4BEB6]/30 pb-8' : 'flex flex-col'}`}
+                    onMouseEnter={() => setIsHovered(product.id)} 
+                    onMouseLeave={() => setIsHovered(null)}
+                  >
                     
-                    <Link to={`/product/${product.id}`} className="block w-full cursor-pointer">
-                      <div className="relative w-full aspect-[3/4] bg-[#E9E3DB]/30 overflow-hidden mb-5 rounded-none">
+                    <Link to={`/product/${product.id}`} className={`block ${gridView === 'list' ? 'flex flex-row w-full gap-8 items-center' : 'w-full'}`}>
+                      {/* Image Container */}
+                      <div className={`relative bg-[#E9E3DB]/30 overflow-hidden rounded-none ${gridView === 'list' ? 'w-[200px] shrink-0 aspect-[3/4] mb-0' : 'w-full aspect-[3/4] mb-5'}`}>
                         {product.isNew && <span className="absolute top-4 left-4 bg-white text-[#1A1A1A] px-3 py-1 text-[9px] font-black tracking-widest uppercase z-10 shadow-sm rounded-none">New</span>}
                         <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 mix-blend-multiply" />
                         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1A1A1A]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                       </div>
                       
-                      <div className="flex flex-col gap-1.5 px-1">
+                      {/* Details Section */}
+                      <div className={`flex flex-col px-1 ${gridView === 'list' ? 'flex-1' : 'gap-1.5'}`}>
+                        
+                        {gridView === 'list' && (
+                          <span className="text-[10px] font-bold tracking-widest uppercase text-[#1A1A1A]/50 mb-2">{product.category}</span>
+                        )}
+                        
                         <div className="flex justify-between items-start gap-4">
-                          <h3 className="text-sm font-bold text-[#1A1A1A] leading-tight group-hover:text-[#1A1A1A]/60 transition-colors">{product.name}</h3>
-                          <span className="text-sm font-medium text-[#1A1A1A] shrink-0">${product.price}</span>
+                          <h3 className={`${gridView >= 5 && gridView !== 'list' ? 'text-xs' : gridView === 'list' ? 'text-2xl' : 'text-sm'} font-bold text-[#1A1A1A] leading-tight group-hover:text-[#1A1A1A]/60 transition-colors`}>
+                            {product.name}
+                          </h3>
+                          {gridView !== 'list' && (
+                            <span className={`${gridView >= 5 ? 'text-xs' : 'text-sm'} font-medium text-[#1A1A1A] shrink-0`}>${product.price}</span>
+                          )}
                         </div>
-                        <div className="flex items-center gap-1.5 text-[11px] text-[#1A1A1A]/50 font-medium uppercase tracking-wider mt-1">
-                          <Star size={12} className="fill-[#C4BEB6] text-[#C4BEB6]" />
-                          <span>{product.rating}</span> 
-                          <span>({product.reviews})</span>
-                        </div>
+                        
+                        {/* Rating */}
+                        {gridView !== 'list' && (
+                           <div className="flex items-center gap-1.5 text-[11px] text-[#1A1A1A]/50 font-medium uppercase tracking-wider mt-1">
+                             <Star size={12} className="fill-[#C4BEB6] text-[#C4BEB6]" />
+                             <span>{product.rating || "5.0"}</span> 
+                             <span>({product.reviews})</span>
+                           </div>
+                        )}
+
+                        {/* List View Additional Elements */}
+                        {gridView === 'list' && (
+                          <>
+                            <span className="text-xl font-medium text-[#1A1A1A] mt-2">${product.price}</span>
+                            <p className="text-sm text-[#1A1A1A]/60 mt-4 max-w-xl leading-relaxed">
+                              Discover timeless style with the {product.name}. Expertly crafted for the modern individual, blending luxury materials with effortless wearability.
+                            </p>
+                          </>
+                        )}
                       </div>
                     </Link>
 
-                    <AnimatePresence>
-                      {isHovered === product.id && (
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} transition={{ duration: 0.3 }} className="absolute inset-x-4 bottom-[80px] z-20 pointer-events-auto">
-                          <button onClick={(e) => { e.preventDefault(); navigate(`/product/${product.id}`); }} className="w-full bg-[#1A1A1A] text-white py-3.5 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#1A1A1A] transition-colors shadow-lg rounded-none border border-transparent hover:border-[#1A1A1A]">
-                            <Plus size={16} /> Quick Add
-                          </button>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    {/* Quick Add Buttons */}
+                    {gridView === 'list' ? (
+                       // Button shown inline for List View
+                       <button 
+                         onClick={(e) => { e.preventDefault(); navigate(`/product/${product.id}`); }}
+                         className="absolute right-0 bottom-8 shrink-0 px-8 bg-[#1A1A1A] text-white py-3.5 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#1A1A1A] transition-colors shadow-lg rounded-none border border-[#1A1A1A]"
+                       >
+                         <Plus size={16} /> Quick Add
+                       </button>
+                    ) : (
+                      // Overlay Button for Grid Views
+                      <AnimatePresence>
+                        {isHovered === product.id && (
+                          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} transition={{ duration: 0.3 }} className="absolute inset-x-4 bottom-[65px] z-20 pointer-events-auto">
+                            <button onClick={(e) => { e.preventDefault(); navigate(`/product/${product.id}`); }} className="w-full bg-[#1A1A1A] text-white py-3.5 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#1A1A1A] transition-colors shadow-lg rounded-none border border-transparent hover:border-[#1A1A1A]">
+                              {gridView >= 5 ? <Plus size={16} /> : <><Plus size={16} /> Quick Add</>}
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    )}
+
                   </motion.div>
                 ))}
               </motion.div>

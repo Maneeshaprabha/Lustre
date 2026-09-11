@@ -12,6 +12,7 @@ import KidsPage from './Category/KidsPage';
 import AccessoriesPage from './Category/AccessoriesPage';
 import CollectionPage from './Category/CollectionPage';
 import ProductDetailPage from './Category/ProductDetailPage';
+import NewArrivals from './Category/NewArrivals';
 // Import the PDP
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/shop/kids" element={<KidsPage />} />
             <Route path="/shop/accessories" element={<AccessoriesPage />} />
             <Route path="/collections" element={<CollectionPage />} />
+            <Route path="new-arrivals" element={<NewArrivals />} />
             
             {/* Dynamic route for the Product Detail Page */}
             <Route path="/product/:id" element={<ProductDetailPage />} />
