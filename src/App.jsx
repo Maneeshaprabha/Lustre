@@ -13,6 +13,11 @@ import AccessoriesPage from './Category/AccessoriesPage';
 import CollectionPage from './Category/CollectionPage';
 import ProductDetailPage from './Category/ProductDetailPage';
 import NewArrivals from './Category/NewArrivals';
+import SalePage from './Category/SalePage';
+import GiftCardPage from './Category/GiftCardPage';
+import BlogPage from './Category/BlogPage';
+import BlogDetail from './Category/BlogDetail';
+import ContactPage from './Category/ContactPage';
 // Import the PDP
 
 function App() {
@@ -35,6 +40,11 @@ function App() {
             <Route path="/shop/accessories" element={<AccessoriesPage />} />
             <Route path="/collections" element={<CollectionPage />} />
             <Route path="new-arrivals" element={<NewArrivals />} />
+            <Route path= "sale" element={<SalePage />} />
+            <Route path="/gift-card"  element={<GiftCardPage />} />
+            <Route path ="blog" element={<BlogPage />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
+            <Route path ="contact" element={<ContactPage />} />
             
             {/* Dynamic route for the Product Detail Page */}
             <Route path="/product/:id" element={<ProductDetailPage />} />

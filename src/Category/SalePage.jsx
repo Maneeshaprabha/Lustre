@@ -38,7 +38,7 @@ const GridIcon = ({ type, isActive, onClick }) => {
   );
 };
 
-const NewArrivals = () => {
+const SalePage = () => {
   const [isHovered, setIsHovered] = useState(null);
   const navigate = useNavigate();
 
@@ -49,37 +49,41 @@ const NewArrivals = () => {
 
   // Filter Toggle States
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+  const [isCollectionOpen, setIsCollectionOpen] = useState(true);
   const [isColorOpen, setIsColorOpen] = useState(false);
   const [isPriceOpen, setIsPriceOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
   
   // Active Filter States
-  const [activeCategory, setActiveCategory] = useState('All Arrivals');
+  const [activeCategory, setActiveCategory] = useState('All Sale');
+  const [activeCollections, setActiveCollections] = useState([]);
   const [activeColors, setActiveColors] = useState([]);
   const [activePrice, setActivePrice] = useState(null);
   const [sortOption, setSortOption] = useState('Featured');
 
-  // New Arrivals products
+  // Sale products (Includes originalPrice and discount tags)
   const products = [
-    { id: 101, name: "Asymmetric Silk Midi Dress", price: "420.00", priceNumber: 420, category: "Womenswear", colorHex: "#1A1A1A", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 5.0, reviews: 12 },
-    { id: 102, name: "Double-Breasted Wool Coat", price: "650.00", priceNumber: 650, category: "Menswear", colorHex: "#8B4513", image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 4.8, reviews: 8 },
-    { id: 103, name: "Calfskin Leather Crossbody", price: "380.00", priceNumber: 380, category: "Accessories", colorHex: "#E9E3DB", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 4.9, reviews: 24 },
-    { id: 104, name: "Oversized Cashmere Scarf", price: "185.00", priceNumber: 185, category: "Accessories", colorHex: "#C0C0C0", image: "https://images.unsplash.com/photo-1584030373081-f37b7bb4fa8e?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 5.0, reviews: 31 },
-    { id: 105, name: "Pleated Wide-Leg Trouser", price: "210.00", priceNumber: 210, category: "Womenswear", colorHex: "#1A1A1A", image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 4.7, reviews: 15 },
-    { id: 106, name: "Minimalist Chelsea Boots", price: "320.00", priceNumber: 320, category: "Footwear", colorHex: "#1A1A1A", image: "https://images.unsplash.com/photo-1614252209825-92576b51c103?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 4.8, reviews: 19 },
-    { id: 107, name: "Heavyweight Cotton Hoodie", price: "145.00", priceNumber: 145, category: "Menswear", colorHex: "#FFFFFF", image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 4.6, reviews: 42 },
-    { id: 108, name: "Geometric Gold Cuff", price: "275.00", priceNumber: 275, category: "Jewelry", colorHex: "#D4AF37", image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop", isNew: true, rating: 4.9, reviews: 7 }
+    { id: 201, name: "Wool Blend Tailored Coat", originalPrice: "550.00", price: "385.00", priceNumber: 385, discount: "30%", category: "Menswear", colorHex: "#1A1A1A", image: "https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=800&auto=format&fit=crop", rating: 5.0, reviews: 45 },
+    { id: 202, name: "Draped Silk Maxi Dress", originalPrice: "340.00", price: "170.00", priceNumber: 170, discount: "50%", category: "Womenswear", colorHex: "#E9E3DB", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop", rating: 4.8, reviews: 112 },
+    { id: 203, name: "Signature Leather Tote", originalPrice: "450.00", price: "360.00", priceNumber: 360, discount: "20%", category: "Accessories", colorHex: "#8B4513", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800&auto=format&fit=crop", rating: 4.9, reviews: 88 },
+    { id: 204, name: "Cashmere Knit Sweater", originalPrice: "220.00", price: "154.00", priceNumber: 154, discount: "30%", category: "Womenswear", colorHex: "#E9E3DB", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=800&auto=format&fit=crop", rating: 4.7, reviews: 34 },
+    { id: 205, name: "Double-Breasted Blazer", originalPrice: "420.00", price: "294.00", priceNumber: 294, discount: "30%", category: "Menswear", colorHex: "#4682B4", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=800&auto=format&fit=crop", rating: 4.6, reviews: 215 },
+    { id: 206, name: "Acetate Sunglasses", originalPrice: "220.00", price: "110.00", priceNumber: 110, discount: "50%", category: "Accessories", colorHex: "#1A1A1A", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800&auto=format&fit=crop", rating: 4.8, reviews: 56 },
+    { id: 207, name: "Organic Cotton Overalls", originalPrice: "65.00", price: "45.50", priceNumber: 45.5, discount: "30%", category: "Kids", colorHex: "#8B4513", image: "https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?q=80&w=800&auto=format&fit=crop", rating: 4.9, reviews: 42 },
+    { id: 208, name: "Suede Loafers", originalPrice: "290.00", price: "203.00", priceNumber: 203, discount: "30%", category: "Menswear", colorHex: "#8B4513", image: "https://images.unsplash.com/photo-1614252209825-92576b51c103?q=80&w=800&auto=format&fit=crop", rating: 5.0, reviews: 94 }
   ];
 
   // --- FILTERING LOGIC ---
   const filteredProducts = products.filter(product => {
-    const matchCategory = activeCategory === 'All Arrivals' || product.category === activeCategory;
+    const matchCategory = activeCategory === 'All Sale' || product.category === activeCategory;
+    const matchCollection = activeCollections.length === 0 || activeCollections.some(c => c === product.discount); // Filtering by discount tier as "Collection" here
     const matchColor = activeColors.length === 0 || activeColors.includes(product.colorHex);
     let matchPrice = true;
-    if (activePrice === 'Under $200') matchPrice = product.priceNumber < 200;
-    else if (activePrice === '$200 - $400') matchPrice = product.priceNumber >= 200 && product.priceNumber <= 400;
-    else if (activePrice === 'Over $400') matchPrice = product.priceNumber > 400;
-    return matchCategory && matchColor && matchPrice;
+    if (activePrice === 'Under $100') matchPrice = product.priceNumber < 100;
+    else if (activePrice === '$100 - $200') matchPrice = product.priceNumber >= 100 && product.priceNumber <= 200;
+    else if (activePrice === '$200 - $300') matchPrice = product.priceNumber > 200 && product.priceNumber <= 300;
+    else if (activePrice === 'Over $300') matchPrice = product.priceNumber > 300;
+    return matchCategory && matchCollection && matchColor && matchPrice;
   });
 
   // --- SORTING LOGIC ---
@@ -88,6 +92,10 @@ const NewArrivals = () => {
     if (sortOption === 'Price: High to Low') return b.priceNumber - a.priceNumber;
     return 0; // Featured
   });
+
+  const toggleCollection = (collection) => {
+    setActiveCollections(prev => prev.includes(collection) ? prev.filter(c => c !== collection) : [...prev, collection]);
+  };
 
   const toggleColor = (color) => {
     setActiveColors(prev => prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]);
@@ -112,7 +120,7 @@ const NewArrivals = () => {
         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A]/40" size={16} />
         <input 
           type="text" 
-          placeholder="Search latest arrivals..." 
+          placeholder="Search sale..." 
           className="w-full bg-transparent border border-[#C4BEB6]/60 p-3.5 pl-12 text-sm text-[#1A1A1A] font-medium placeholder:text-[#1A1A1A]/40 focus:outline-none focus:border-[#1A1A1A] rounded-none transition-colors"
         />
       </div>
@@ -127,11 +135,36 @@ const NewArrivals = () => {
           <AnimatePresence>
             {isCategoryOpen && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col overflow-hidden pt-3 gap-2">
-                {['All Arrivals', 'Womenswear', 'Menswear', 'Accessories', 'Footwear', 'Jewelry'].map((cat) => (
+                {['All Sale', 'Womenswear', 'Menswear', 'Kids', 'Accessories'].map((cat) => (
                   <button key={cat} onClick={() => setActiveCategory(cat)} className={`text-left py-1 text-sm font-medium transition-colors flex items-center rounded-none ${activeCategory === cat ? 'text-[#1A1A1A] font-bold' : 'text-[#1A1A1A]/60 hover:text-[#1A1A1A]'}`}>
                     {cat}
                   </button>
                 ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* DISCOUNT TIER FILTER (Mapped as Collections) */}
+        <div className="border-b border-[#C4BEB6]/40 pb-6">
+          <button onClick={() => setIsCollectionOpen(!isCollectionOpen)} className="flex items-center justify-between w-full pb-2 rounded-none transition-colors group">
+            <span className="font-bold text-sm tracking-wide uppercase">Discount</span>
+            <ChevronDown size={16} className={`transition-transform duration-300 ${isCollectionOpen ? 'rotate-180' : ''}`} />
+          </button>
+          <AnimatePresence>
+            {isCollectionOpen && (
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col gap-3 pt-3 overflow-hidden">
+                {['20%', '30%', '50%'].map((collection) => {
+                  const isActive = activeCollections.includes(collection);
+                  return (
+                    <button key={collection} onClick={() => toggleCollection(collection)} className="flex items-center gap-3 text-sm group rounded-none">
+                      <div className={`w-4 h-4 border rounded-none flex items-center justify-center transition-colors ${isActive ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#C4BEB6]/60 group-hover:border-[#1A1A1A]'}`}>
+                        {isActive && <Check size={12} className="text-white" />}
+                      </div>
+                      <span className={`transition-colors ${isActive ? 'text-[#1A1A1A] font-bold' : 'text-[#1A1A1A]/70 group-hover:text-[#1A1A1A]'}`}>{collection} OFF</span>
+                    </button>
+                  )
+                })}
               </motion.div>
             )}
           </AnimatePresence>
@@ -146,7 +179,7 @@ const NewArrivals = () => {
           <AnimatePresence>
             {isColorOpen && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-wrap gap-3 pt-3 overflow-hidden">
-                {['#1A1A1A', '#8B4513', '#D4AF37', '#C0C0C0', '#E9E3DB', '#FFFFFF'].map((color, idx) => {
+                {['#1A1A1A', '#8B4513', '#4682B4', '#E9E3DB', '#FFFFFF'].map((color, idx) => {
                   const isActive = activeColors.includes(color);
                   return (
                     <button 
@@ -170,7 +203,7 @@ const NewArrivals = () => {
           <AnimatePresence>
             {isPriceOpen && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-col gap-3 pt-3 overflow-hidden">
-                {['Under $200', '$200 - $400', 'Over $400'].map((price) => (
+                {['Under $100', '$100 - $200', '$200 - $300', 'Over $300'].map((price) => (
                   <button key={price} onClick={() => setActivePrice(activePrice === price ? null : price)} className="flex items-center gap-3 text-sm group rounded-none">
                     <div className={`w-4 h-4 border rounded-none flex items-center justify-center transition-colors ${activePrice === price ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#C4BEB6]/60 group-hover:border-[#1A1A1A]'}`}>
                       {activePrice === price && <Check size={12} className="text-white" />}
@@ -197,19 +230,17 @@ const NewArrivals = () => {
               <nav className="text-[10px] md:text-xs font-bold tracking-[0.2em] text-[#C4BEB6] uppercase mb-10">
                 <Link to="/" className="hover:text-[#1A1A1A] transition-colors">Home</Link>
                 <span className="mx-3">/</span>
-                <Link to="/shop" className="hover:text-[#1A1A1A] transition-colors">Shop</Link>
-                <span className="mx-3">/</span>
-                <span className="text-[#1A1A1A]">New Arrivals</span>
+                <span className="text-[#1A1A1A]">Sale</span>
               </nav>
               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter uppercase leading-[0.9] mb-6 text-[#1A1A1A]">
-                The <br className="hidden md:block"/> Latest.
+                The <br className="hidden md:block"/> Sale.
               </motion.h1>
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.8 }} className="max-w-md text-sm md:text-base text-[#1A1A1A]/70 font-medium leading-relaxed">
-                Discover the newest additions to the Lustre collection. Uncompromised designs, fresh silhouettes, and the season's most coveted pieces.
+                End of season archive. Enjoy up to 50% off selected styles across all categories. Uncompromised luxury at exceptional value.
               </motion.p>
             </div>
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 1, ease: "easeOut" }} className="hidden md:block w-full md:w-1/2 lg:w-2/5 aspect-[4/3] bg-[#E9E3DB] overflow-hidden rounded-none">
-              <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1200&auto=format&fit=crop" alt="Latest Fashion Arrivals" className="w-full h-full object-cover object-top grayscale-[15%] hover:scale-105 transition-transform duration-1000" />
+              <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop" alt="Lustre Sale" className="w-full h-full object-cover object-top grayscale-[15%] hover:scale-105 transition-transform duration-1000" />
             </motion.div>
           </div>
         </section>
@@ -331,7 +362,7 @@ const NewArrivals = () => {
                 <p className="text-[#1A1A1A]/50 text-lg font-medium">No products match your selected filters.</p>
                 <button 
                   onClick={() => {
-                    setActiveCategory('All Arrivals'); setActiveColors([]); setActivePrice(null); setSortOption('Featured');
+                    setActiveCategory('All Sale'); setActiveCollections([]); setActiveColors([]); setActivePrice(null); setSortOption('Featured');
                   }}
                   className="mt-4 border-b border-[#1A1A1A] text-[#1A1A1A] text-sm font-bold uppercase tracking-widest pb-1 hover:text-[#1A1A1A]/60 transition-colors"
                 >
@@ -355,8 +386,13 @@ const NewArrivals = () => {
                     <Link to={`/product/${product.id}`} className={`block ${gridView === 'list' ? 'flex flex-row w-full gap-8 items-center' : 'w-full'}`}>
                       {/* Image Container */}
                       <div className={`relative bg-[#E9E3DB]/30 overflow-hidden rounded-none ${gridView === 'list' ? 'w-[200px] shrink-0 aspect-[3/4] mb-0' : 'w-full aspect-[3/4] mb-5'}`}>
-                        {product.isNew && <span className="absolute top-4 left-4 bg-white text-[#1A1A1A] px-3 py-1 text-[9px] font-black tracking-widest uppercase z-10 shadow-sm rounded-none">New</span>}
-                        <img src={product.image} alt={product.name} className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 mix-blend-multiply" />
+                        {/* SALE DISCOUNT TAG */}
+                        {product.discount && (
+                          <span className="absolute top-4 left-4 bg-[#1A1A1A] text-white px-3 py-1 text-[9px] font-black tracking-widest uppercase z-10 shadow-sm rounded-none border border-[#1A1A1A]/10">
+                            {product.discount} OFF
+                          </span>
+                        )}
+                        <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 mix-blend-multiply" />
                         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1A1A1A]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                       </div>
                       
@@ -372,7 +408,11 @@ const NewArrivals = () => {
                             {product.name}
                           </h3>
                           {gridView !== 'list' && (
-                            <span className={`${gridView >= 5 ? 'text-xs' : 'text-sm'} font-medium text-[#1A1A1A] shrink-0`}>${product.price}</span>
+                            <div className="flex flex-col items-end shrink-0">
+                              <span className={`${gridView >= 5 ? 'text-xs' : 'text-sm'} font-medium text-[#1A1A1A]`}>${product.price}</span>
+                              {/* Strikethrough Original Price */}
+                              <span className="text-[10px] md:text-xs font-medium text-[#1A1A1A]/40 line-through">${product.originalPrice}</span>
+                            </div>
                           )}
                         </div>
                         
@@ -388,9 +428,12 @@ const NewArrivals = () => {
                         {/* List View Additional Elements */}
                         {gridView === 'list' && (
                           <>
-                            <span className="text-xl font-medium text-[#1A1A1A] mt-2">${product.price}</span>
+                            <div className="flex items-center gap-3 mt-2">
+                              <span className="text-xl font-medium text-[#1A1A1A]">${product.price}</span>
+                              <span className="text-sm font-medium text-[#1A1A1A]/40 line-through">${product.originalPrice}</span>
+                            </div>
                             <p className="text-sm text-[#1A1A1A]/60 mt-4 max-w-xl leading-relaxed">
-                              Fresh off the runway. The {product.name} is a striking new addition to the Lustre collection, crafted with premium materials and signature design details.
+                              An exceptional piece from our archive, now available at a special price. The {product.name} blends premium materials with signature Lustre design details.
                             </p>
                           </>
                         )}
@@ -429,7 +472,7 @@ const NewArrivals = () => {
               <div className="flex items-center justify-between w-full mt-20 pt-8 border-t border-[#C4BEB6]/40">
                 <button className="flex items-center gap-2 text-sm font-bold text-[#1A1A1A]/60 hover:text-[#1A1A1A] transition-colors rounded-none"><ArrowLeft size={16} /> Previous</button>
                 <div className="hidden md:flex items-center gap-2">
-                  {[1, 2, 3, '...', 8].map((page, index) => (
+                  {[1, 2, 3].map((page, index) => (
                     <button key={index} className={`w-10 h-10 flex items-center justify-center rounded-none text-sm font-bold transition-all border ${page === 1 ? 'border-[#1A1A1A] bg-[#1A1A1A] text-white' : 'border-transparent text-[#1A1A1A]/60 hover:border-[#C4BEB6] hover:text-[#1A1A1A]'}`}>
                       {page}
                     </button>
@@ -448,4 +491,4 @@ const NewArrivals = () => {
   );
 };
 
-export default NewArrivals;
+export default SalePage;
