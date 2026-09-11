@@ -103,7 +103,7 @@ const NewCollectionBanner = () => {
         className="w-full mt-20 md:mt-28 relative h-[400px] md:h-[500px] lg:h-[600px] bg-[#E9E3DB]/20"
       >
         <img 
-          src="https://images.unsplash.com/photo-1489987707023-afc824781ef5?q=80&w=2000&auto=format&fit=crop" 
+          src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dfit=crop" 
           alt="Lustre Outerwear Collection on Rack"
           className="w-full h-full object-cover object-center mix-blend-multiply"
         />
