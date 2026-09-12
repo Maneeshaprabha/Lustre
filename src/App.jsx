@@ -39,12 +39,12 @@ function App() {
             <Route path="/shop/kids" element={<KidsPage />} />
             <Route path="/shop/accessories" element={<AccessoriesPage />} />
             <Route path="/collections" element={<CollectionPage />} />
-            <Route path="new-arrivals" element={<NewArrivals />} />
-            <Route path= "sale" element={<SalePage />} />
-            <Route path="/gift-card"  element={<GiftCardPage />} />
-            <Route path ="blog" element={<BlogPage />} />
+            <Route path="/new-arrivals" element={<NewArrivals />} />
+            <Route path="/sale" element={<SalePage />} />
+            <Route path="/gift-card" element={<GiftCardPage />} />
+            <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:id" element={<BlogDetail />} />
-            <Route path ="contact" element={<ContactPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             
             {/* Dynamic route for the Product Detail Page */}
             <Route path="/product/:id" element={<ProductDetailPage />} />

@@ -7,6 +7,7 @@ const Navbar = () => {
   const [activeTab, setActiveTab] = useState("HOME");
   const [isShopHovered, setIsShopHovered] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isMobileShopOpen, setIsMobileShopOpen] = useState(false);
 
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
@@ -42,6 +43,7 @@ const Navbar = () => {
 
   return (
     <>
+      {/* Main Navbar */}
       <nav className="sticky top-0 z-50 w-full bg-white border-b border-[#C4BEB6]/40 px-6 md:px-12 py-6 font-sans antialiased">
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           
@@ -113,7 +115,7 @@ const Navbar = () => {
                                 setActiveTab("SHOP");
                                 setIsShopHovered(false);
                               }}
-                              className="px-6 py-2.5 text-sm font-medium text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#E9E3DB]/20 transition-all duration-300 flex items-center group"
+                              className="px-6 py-2.5 text-sm font-medium text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#E9E3DB]/30 transition-all duration-300 flex items-center group"
                             >
                               <span className="relative overflow-hidden">
                                 {dropItem.label}
@@ -130,7 +132,7 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right Icons & Menu Toggle */}
+          {/* Right Icons & Hamburger Menu */}
           <div className="flex items-center gap-6 z-50 relative">
             <button className="text-[#1A1A1A] transition-opacity duration-300 hover:opacity-60">
               <Search size={20} strokeWidth={1.5} />
@@ -143,10 +145,11 @@ const Navbar = () => {
               </span>
             </button>
 
-            {/* Hamburger button to open side drawer */}
+            {/* Menu Toggle Button */}
             <button 
               onClick={toggleDrawer}
               className="text-[#1A1A1A] transition-opacity duration-300 hover:opacity-60 ml-2"
+              aria-label="Open Menu Drawer"
             >
               <Menu size={22} strokeWidth={1.5} />
             </button>
@@ -155,7 +158,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Slide-out Panel (Drawer) */}
+      {/* Slide-out Panel / Drawer (Mobile & Sidebar Navigation) */}
       <AnimatePresence>
         {isDrawerOpen && (
           <>
@@ -168,82 +171,112 @@ const Navbar = () => {
               className="fixed inset-0 bg-black z-[60]"
             />
 
-            {/* Side Content Panel */}
+            {/* Side Drawer Content */}
             <motion.div 
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.4, ease: "easeInOut" }}
-              className="fixed top-0 right-0 h-screen w-full md:w-[420px] bg-[#1A1A1A] text-white border-l border-white/10 z-[70] p-8 md:p-12 flex flex-col shadow-2xl overflow-y-auto"
+              className="fixed top-0 right-0 h-screen w-full sm:w-[420px] bg-[#1A1A1A] text-white border-l border-white/10 z-[70] p-8 md:p-12 flex flex-col shadow-2xl overflow-y-auto"
             >
               {/* Header & Close Button */}
-              <div className="flex items-center justify-between mb-10">
-                <span className="text-white font-black tracking-widest uppercase text-lg">Lustre.</span>
+              <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                <span className="text-white font-black tracking-[0.25em] uppercase text-lg">Lustre.</span>
                 <button 
                   onClick={toggleDrawer} 
-                  className="text-gray-400 hover:text-white transition-all bg-white/5 hover:bg-white/10 p-2 rounded-full"
+                  className="text-[#C4BEB6] hover:text-white transition-all bg-white/5 hover:bg-white/10 p-2 rounded-full"
                 >
                   <X className="w-5 h-5" strokeWidth={1.5} />
                 </button>
               </div>
 
               {/* Navigation Links inside Drawer */}
-              <div className="flex flex-col gap-4 mb-10 border-b border-white/10 pb-8">
-                <p className="text-[10px] text-gray-500 font-bold tracking-[0.2em] uppercase mb-1">Menu</p>
+              <div className="flex flex-col gap-3 mb-8 border-b border-white/10 pb-6">
+                <p className="text-[10px] text-[#C4BEB6]/60 font-bold tracking-[0.2em] uppercase mb-1">Navigation</p>
                 {navItems.map((link) => (
-                  <Link 
-                    key={link.label} 
-                    to={link.to} 
-                    onClick={toggleDrawer}
-                    className="text-lg font-semibold tracking-wider text-gray-300 hover:text-white transition-colors uppercase"
-                  >
-                    {link.label}
-                  </Link>
+                  <div key={link.label} className="flex flex-col">
+                    <div className="flex items-center justify-between">
+                      <Link 
+                        to={link.to} 
+                        onClick={() => {
+                          if (!link.hasDropdown) toggleDrawer();
+                        }}
+                        className="text-sm font-bold tracking-[0.15em] text-gray-300 hover:text-white transition-colors uppercase py-1.5"
+                      >
+                        {link.label}
+                      </Link>
+
+                      {link.hasDropdown && (
+                        <button 
+                          onClick={() => setIsMobileShopOpen(!isMobileShopOpen)}
+                          className="text-[#C4BEB6] p-2 hover:text-white"
+                        >
+                          <ChevronDown size={16} className={`transform transition-transform duration-300 ${isMobileShopOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Expandable Mobile Submenu */}
+                    {link.hasDropdown && isMobileShopOpen && (
+                      <div className="flex flex-col pl-4 mt-1 gap-2 border-l border-white/10 mb-2">
+                        {link.dropdownItems.map((sub, sIdx) => (
+                          <Link
+                            key={sIdx}
+                            to={sub.to}
+                            onClick={toggleDrawer}
+                            className="text-xs font-medium uppercase tracking-widest text-[#C4BEB6]/80 hover:text-white transition-colors py-1"
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
               
-              {/* Contact & Location Info */}
-              <div className="flex flex-col gap-6 mt-auto">
+              {/* Contact & Location Links */}
+              <div className="flex flex-col gap-6 mt-auto pt-2">
                 <div>
-                  <h3 className="text-white text-2xl font-medium tracking-tight mb-2">Get in <span className="text-gray-500">touch.</span></h3>
-                  <p className="text-gray-400 text-sm font-light leading-relaxed">
+                  <h3 className="text-white text-xl font-medium tracking-tight mb-1.5">Get in <span className="text-[#C4BEB6]">touch.</span></h3>
+                  <p className="text-gray-400 text-xs sm:text-sm font-light leading-relaxed">
                     Have questions about our collections or need assistance? Reach out to our team.
                   </p>
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  {/* Location / Store Link */}
+                  {/* Location Link */}
                   <Link 
                     to="/location" 
                     onClick={toggleDrawer}
                     className="flex items-start gap-4 group p-2 -mx-2 rounded-lg hover:bg-white/5 transition-colors"
                   >
                     <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                      <MapPin className="w-4 h-4 text-gray-300" />
+                      <MapPin className="w-4 h-4 text-[#C4BEB6]" />
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-0.5">Location</p>
-                      <p className="text-gray-300 text-sm font-light">Explore our flagship store & studios.</p>
+                      <p className="text-[10px] text-[#C4BEB6]/60 uppercase tracking-widest mb-0.5">Location</p>
+                      <p className="text-gray-300 text-xs sm:text-sm font-light">Explore our flagship store & studios.</p>
                     </div>
                   </Link>
 
                   <div className="flex items-center gap-4 group p-2 -mx-2">
                     <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                      <Mail className="w-4 h-4 text-gray-300" />
+                      <Mail className="w-4 h-4 text-[#C4BEB6]" />
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-0.5">Email</p>
-                      <a href="mailto:hello@lustre.com" className="text-gray-300 text-sm font-light hover:text-white transition-colors">hello@lustre.com</a>
+                      <p className="text-[10px] text-[#C4BEB6]/60 uppercase tracking-widest mb-0.5">Email</p>
+                      <a href="mailto:hello@lustre.com" className="text-gray-300 text-xs sm:text-sm font-light hover:text-white transition-colors">hello@lustre.com</a>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-4 group p-2 -mx-2">
                     <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                      <Phone className="w-4 h-4 text-gray-300" />
+                      <Phone className="w-4 h-4 text-[#C4BEB6]" />
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-0.5">Phone</p>
-                      <a href="tel:+94701234562" className="text-gray-300 text-sm font-light hover:text-white transition-colors">+94 70 123 4562</a>
+                      <p className="text-[10px] text-[#C4BEB6]/60 uppercase tracking-widest mb-0.5">Phone</p>
+                      <a href="tel:+94701234562" className="text-gray-300 text-xs sm:text-sm font-light hover:text-white transition-colors">+94 70 123 4562</a>
                     </div>
                   </div>
                 </div>
