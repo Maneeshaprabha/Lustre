@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const NewArrivalsModern = () => {
   const products = [
@@ -51,46 +52,59 @@ const NewArrivalsModern = () => {
       <Star 
         key={index} 
         size={12} 
-        className={index < rating ? "text-[#1A1A1A] fill-[#1A1A1A]" : "text-[#C4BEB6]"} 
+        className={index < rating ? "text-[#3d352e] fill-[#3d352e]" : "text-[#C4BEB6]"} 
         strokeWidth={index < rating ? 0 : 1.5}
       />
     ));
   };
 
   return (
-    <section className="w-full bg-[#E9E3DB] py-20 px-6 md:px-12 font-sans antialiased overflow-hidden">
-      <div className="max-w-[1400px] mx-auto">
+    <section className="w-full bg-[#FBFBFA] border-y border-[#C4BEB6]/30 py-24 px-6 md:px-12 font-sans antialiased overflow-hidden">
+      <div className="max-w-[1500px] mx-auto">
         
-        {/* Modern Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
-          <div>
+        {/* Modern Header Section with Paragraph */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8 pr-4 md:pr-0">
+          <div className="flex flex-col gap-4 max-w-xl">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-black text-[#1A1A1A] tracking-tight mb-2"
+              className="text-4xl md:text-5xl lg:text-6xl font-black text-[#1A1A1A] tracking-tighter uppercase mb-1"
             >
               New Arrivals
             </motion.h2>
+            
             <motion.div 
               initial={{ opacity: 0, width: 0 }}
-              whileInView={{ opacity: 1, width: "60px" }}
+              whileInView={{ opacity: 1, width: "80px" }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="h-[3px] bg-[#3d352e]"
+            />
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="h-[3px] bg-[#1A1A1A]"
-            />
+              className="text-[#1A1A1A]/70 text-sm md:text-base font-medium leading-relaxed mt-2"
+            >
+              Discover the latest additions to the Lustre archive. Fresh silhouettes, premium textures, and uncompromised craftsmanship designed for the modern wardrobe.
+            </motion.p>
           </div>
           
-          <motion.button 
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="group relative pb-1 overflow-hidden text-[#1A1A1A] font-bold text-xs tracking-[0.2em] uppercase"
-          >
-            Explore All
-            <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#1A1A1A] transform origin-left scale-x-100 transition-transform duration-300 group-hover:scale-x-0" />
-            <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#C4BEB6] transform origin-right scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
-          </motion.button>
+          <Link to="/new-arrivals">
+            <motion.button 
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="group relative pb-1 overflow-hidden text-[#3d352e] font-bold text-xs tracking-[0.2em] uppercase mb-2 md:mb-0"
+            >
+              Explore All
+              <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#3d352e] transform origin-left scale-x-100 transition-transform duration-300 group-hover:scale-x-0" />
+              <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#C4BEB6] transform origin-right scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+            </motion.button>
+          </Link>
         </div>
 
         {/* Editorial Product Grid */}
@@ -105,52 +119,61 @@ const NewArrivalsModern = () => {
             <motion.div 
               key={product.id} 
               variants={itemVariants}
-              className="group flex flex-col cursor-pointer"
+              className="group flex flex-col cursor-pointer relative"
             >
-              {/* Image Container - Tall Editorial Aspect Ratio */}
-              <div className="relative w-full aspect-[3/4] bg-white overflow-hidden mb-5">
-                
-                {/* Minimalist Discount Tag */}
-                <div className="absolute top-4 left-4 bg-[#C4BEB6] text-[#1A1A1A] px-3 py-1.5 text-[9px] font-black tracking-[0.2em] uppercase z-10 shadow-sm">
-                  {product.discount}
+              
+              <Link to={`/product/${product.id}`} className="block w-full">
+                {/* Image Container */}
+                <div className="relative w-full aspect-[3/4] bg-[#E9E3DB]/30 overflow-hidden mb-5 rounded-none border border-transparent group-hover:border-[#C4BEB6]/30 transition-colors">
+                  
+                  {/* Minimalist Discount Tag */}
+                  <div className="absolute top-4 left-4 bg-[#3d352e] text-[#E9E3DB] px-3 py-1.5 text-[9px] font-black tracking-[0.2em] uppercase z-10 shadow-sm rounded-none">
+                    {product.discount}
+                  </div>
+
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-full object-cover object-top transition-transform duration-700 ease-[0.25,0.46,0.45,0.94] group-hover:scale-105 mix-blend-multiply"
+                  />
+
+                  {/* Subtle gradient overlay */}
+                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1A1A1A]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 </div>
 
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-
-                {/* Modern Floating Action Overlay */}
-                <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.25,0.46,0.45,0.94] z-20">
-                  <button className="w-full bg-[#1A1A1A] text-[#E9E3DB] py-4 flex items-center justify-center gap-2 text-xs font-bold tracking-widest uppercase hover:bg-[#1A1A1A]/90 transition-colors">
-                    <Plus size={16} /> Quick Add
-                  </button>
-                </div>
-                
-                {/* Subtle gradient overlay to make the button pop when sliding up */}
-                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1A1A1A]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-              </div>
-
-              {/* Product Info - Cleanly separated from the image */}
-              <div className="flex flex-col gap-1.5 px-1">
-                <div className="flex justify-between items-start gap-4">
-                  <h3 className="text-base font-bold text-[#1A1A1A] leading-tight group-hover:text-[#1A1A1A]/70 transition-colors">
-                    {product.name}
-                  </h3>
-                  <div className="flex gap-0.5 pt-1 shrink-0">
-                    {renderStars(product.rating)}
+                {/* Product Info */}
+                <div className="flex flex-col gap-1.5 px-1">
+                  <div className="flex justify-between items-start gap-4">
+                    <h3 className="text-sm lg:text-base font-bold text-[#1A1A1A] leading-tight group-hover:text-[#3d352e] transition-colors">
+                      {product.name}
+                    </h3>
+                    <div className="flex gap-0.5 pt-1 shrink-0">
+                      {renderStars(product.rating)}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-sm font-black text-[#3d352e]">
+                      ${product.price}
+                    </span>
+                    <span className="text-xs text-[#1A1A1A]/40 line-through font-medium">
+                      ${product.originalPrice}
+                    </span>
                   </div>
                 </div>
-                
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="text-sm font-black text-[#1A1A1A]">
-                    ${product.price}
-                  </span>
-                  <span className="text-xs text-[#1A1A1A]/50 line-through font-medium">
-                    ${product.originalPrice}
-                  </span>
-                </div>
+              </Link>
+
+              {/* Modern Floating Action Overlay (Quick Add Button) */}
+              <div className="absolute inset-x-4 bottom-[85px] translate-y-4 opacity-0 pointer-events-none group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 ease-[0.25,0.46,0.45,0.94] z-20">
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log(`Added ${product.name} to bag`);
+                  }}
+                  className="w-full bg-[#3d352e] text-[#E9E3DB] py-3.5 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#3d352e] border border-transparent hover:border-[#3d352e] transition-colors shadow-xl rounded-none"
+                >
+                  <Plus size={16} /> Quick Add
+                </button>
               </div>
 
             </motion.div>

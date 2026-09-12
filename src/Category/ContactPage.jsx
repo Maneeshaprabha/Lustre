@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Clock, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
 
 // Bottom components
 import Recommendations from './Recommendations';
 
 const ContactPage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: 'General Inquiry',
     message: ''
   });
+
+  const subjectOptions = [
+    'General Inquiry',
+    'Order Support & Tracking',
+    'Bespoke Styling Consultation',
+    'Press & Media Relations'
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,7 +53,7 @@ const ContactPage = () => {
           </div>
         </div>
 
-        {/* MAIN SPLIT SECTION (Like Vinta Roofing layout) */}
+        {/* MAIN SPLIT SECTION */}
         <main className="max-w-[1500px] mx-auto px-6 md:px-12 pb-24 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
           
           {/* LEFT SIDE: CONTACT DETAILS (5 Columns) */}
@@ -67,12 +75,12 @@ const ContactPage = () => {
               <div className="flex flex-col gap-8">
                 
                 {/* Address */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-[#1A1A1A] text-white flex items-center justify-center shrink-0 rounded-none">
+                <div className="flex items-start gap-4 group">
+                  <div className="w-10 h-10 bg-[#1A1A1A] group-hover:bg-[#3d352e] text-white flex items-center justify-center shrink-0 rounded-none transition-colors">
                     <MapPin size={18} strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3 className="text-xs font-bold tracking-[0.15em] uppercase text-[#1A1A1A] mb-1">Flagship Flagship</h3>
+                    <h3 className="text-xs font-bold tracking-[0.15em] uppercase text-[#1A1A1A] mb-1">Flagship Store</h3>
                     <p className="text-sm text-[#1A1A1A]/70 font-medium leading-relaxed">
                       742 Madison Avenue, New York<br />NY 10021, United States
                     </p>
@@ -80,8 +88,8 @@ const ContactPage = () => {
                 </div>
 
                 {/* Phone */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-[#1A1A1A] text-white flex items-center justify-center shrink-0 rounded-none">
+                <div className="flex items-start gap-4 group">
+                  <div className="w-10 h-10 bg-[#1A1A1A] group-hover:bg-[#3d352e] text-white flex items-center justify-center shrink-0 rounded-none transition-colors">
                     <Phone size={18} strokeWidth={1.5} />
                   </div>
                   <div>
@@ -93,8 +101,8 @@ const ContactPage = () => {
                 </div>
 
                 {/* Email */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-[#1A1A1A] text-white flex items-center justify-center shrink-0 rounded-none">
+                <div className="flex items-start gap-4 group">
+                  <div className="w-10 h-10 bg-[#1A1A1A] group-hover:bg-[#3d352e] text-white flex items-center justify-center shrink-0 rounded-none transition-colors">
                     <Mail size={18} strokeWidth={1.5} />
                   </div>
                   <div>
@@ -120,7 +128,7 @@ const ContactPage = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="lg:col-span-7 flex flex-col justify-center"
+            className="lg:col-span-7 flex flex-col justify-center relative z-10"
           >
             {isSubmitted ? (
               <motion.div 
@@ -128,7 +136,7 @@ const ContactPage = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-[#FBFBFA] border border-[#1A1A1A] p-12 text-center flex flex-col items-center justify-center rounded-none"
               >
-                <CheckCircle2 size={48} className="text-[#1A1A1A] mb-6" strokeWidth={1.5} />
+                <CheckCircle2 size={48} className="text-[#3d352e] mb-6" strokeWidth={1.5} />
                 <h3 className="text-2xl font-bold uppercase tracking-tight text-[#1A1A1A] mb-3">Message Dispatched</h3>
                 <p className="text-sm text-[#1A1A1A]/70 font-medium max-w-md leading-relaxed mb-8">
                   Thank you for reaching out. A client advisor has received your inquiry and will be in contact with you shortly.
@@ -177,18 +185,60 @@ const ContactPage = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
+                {/* LUXURY CUSTOM DROPDOWN */}
+                <div className="flex flex-col gap-2 relative">
                   <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#1A1A1A]/60">Subject</label>
-                  <select 
-                    value={formData.subject}
-                    onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                    className="w-full bg-transparent border border-[#C4BEB6] p-4 text-sm text-[#1A1A1A] font-medium focus:outline-none focus:border-[#1A1A1A] rounded-none transition-colors cursor-pointer"
+                  
+                  {/* Select Trigger Button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className={`w-full bg-transparent border ${isDropdownOpen ? 'border-[#1A1A1A]' : 'border-[#C4BEB6]'} p-4 text-sm text-[#1A1A1A] font-medium flex justify-between items-center rounded-none transition-colors hover:border-[#1A1A1A] focus:outline-none`}
                   >
-                    <option value="General Inquiry">General Inquiry</option>
-                    <option value="Order Support">Order Support & Tracking</option>
-                    <option value="Styling Consultation">Bespoke Styling Consultation</option>
-                    <option value="Press & Media">Press & Media Relations</option>
-                  </select>
+                    <span>{formData.subject}</span>
+                    <motion.div animate={{ rotate: isDropdownOpen ? 180 : 0 }} transition={{ duration: 0.3 }}>
+                      <ChevronDown size={16} strokeWidth={1.5} className="text-[#1A1A1A]/60" />
+                    </motion.div>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {isDropdownOpen && (
+                      <>
+                        {/* Invisible Backdrop to close dropdown when clicking outside */}
+                        <div 
+                          className="fixed inset-0 z-40" 
+                          onClick={() => setIsDropdownOpen(false)} 
+                        />
+                        
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute top-[100%] left-0 w-full bg-white border border-[#1A1A1A] shadow-xl z-50 rounded-none flex flex-col"
+                        >
+                          {subjectOptions.map((option) => (
+                            <button
+                              key={option}
+                              type="button"
+                              onClick={() => {
+                                setFormData({ ...formData, subject: option });
+                                setIsDropdownOpen(false);
+                              }}
+                              className={`text-left w-full px-4 py-3.5 text-sm font-medium transition-colors duration-200 ${
+                                formData.subject === option
+                                  ? 'bg-[#FBFBFA] text-[#3d352e] font-bold border-l-2 border-[#3d352e]'
+                                  : 'text-[#1A1A1A]/80 hover:bg-[#3d352e] hover:text-[#E9E3DB] border-l-2 border-transparent'
+                              }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <div className="flex flex-col gap-2">
@@ -205,7 +255,7 @@ const ContactPage = () => {
 
                 <button 
                   type="submit"
-                  className="w-full bg-[#1A1A1A] text-white py-5 flex items-center justify-center gap-3 text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-[#1A1A1A] border border-[#1A1A1A] transition-colors shadow-xl rounded-none mt-2"
+                  className="w-full bg-[#1A1A1A] text-[#E9E3DB] py-5 flex items-center justify-center gap-3 text-xs font-bold tracking-[0.2em] uppercase hover:bg-[#3d352e] transition-colors shadow-xl rounded-none mt-2 border border-transparent hover:border-[#3d352e]"
                 >
                   Submit Inquiry <ArrowRight size={16} />
                 </button>
@@ -216,7 +266,6 @@ const ContactPage = () => {
         </main>
       </div>
 
-      {/* Recommendations at bottom */}
       <Recommendations />
     </>
   );
