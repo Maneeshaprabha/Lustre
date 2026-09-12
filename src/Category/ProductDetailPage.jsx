@@ -6,9 +6,16 @@ import {
   Scissors, Box, Leaf, Globe, Droplet, Shield, User, MoveHorizontal, X
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
+import { useCarts } from '../context/CartContext';
+// ඔයාගේ CartContext එක තියෙන තැනින් useCart import කරගන්න. 
+// (ProductDetailPage එකයි CartContext එකයි එකම ෆෝල්ඩරේ (Category) නම් මේ path එක හරි)
+
 
 const ProductDetailPage = () => {
   const { id } = useParams();
+
+  // Cart Context එකෙන් addToCart function එක ගන්නවා
+  const { addToCart } = useCarts();
 
   // Scroll to top when page loads or ID changes
   useEffect(() => {
@@ -17,6 +24,7 @@ const ProductDetailPage = () => {
 
   // Product Data
   const product = {
+    id: id || "hoodie-001", // Cart එකේදි අඳුරගන්න id එකක් අත්‍යවශ්‍යයි
     name: "Essential Oversized Hoodie",
     price: 59.99,
     originalPrice: 89.99,
@@ -211,9 +219,17 @@ const ProductDetailPage = () => {
 
           {/* Action Buttons */}
           <div className="flex gap-4 mb-10">
-            <button className="flex-1 bg-[#3d352e] text-white py-4 flex items-center justify-center gap-3 text-xs font-bold tracking-[0.2em] uppercase hover:bg-[#1A1A1A] border border-[#3d352e] transition-colors rounded-none shadow-xl">
+            {/* ADD TO CART BUTTON */}
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                addToCart(product, selectedSize, selectedColor);
+              }}
+              className="flex-1 bg-[#3d352e] text-white py-4 flex items-center justify-center gap-3 text-xs font-bold tracking-[0.2em] uppercase hover:bg-[#1A1A1A] border border-[#3d352e] transition-colors rounded-none shadow-xl"
+            >
               <ShoppingBag size={18} /> Add to Cart
             </button>
+            
             <button className="w-14 shrink-0 border border-[#C4BEB6]/60 flex items-center justify-center text-[#1A1A1A] hover:border-[#1A1A1A] hover:text-[#3d352e] transition-colors rounded-none">
               <Heart size={20} strokeWidth={1.5} />
             </button>

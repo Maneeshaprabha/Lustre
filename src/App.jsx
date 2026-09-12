@@ -20,49 +20,57 @@ import BlogDetail from './Category/BlogDetail';
 import ContactPage from './Category/ContactPage';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-// Import the PDP
+import { CartProvider } from './context/CartContext';
+import CartDrawer from './context/CartDrawer';
+
+import CheckoutPage from './Category/CheckoutPage';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-white">
-        
-        {/* Navbar stays at the top */}
-        <Navbar />
+      {/* CartProvider එකෙන් මුළු App එකම Wrap කරනවා */}
+      <CartProvider>
+        <div className="min-h-screen flex flex-col bg-white">
+          
+          {/* Cart Drawer Component */}
+          <CartDrawer />
+          
+          {/* Navbar stays at the top */}
+          <Navbar />
 
-        {/* flex-grow ensures the footer stays at the bottom of short pages */}
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/shop" element={<CategorySection />} />
-            <Route path="/shop/all" element={<ShopPage />} />
-            <Route path="/shop/womenswear" element={<WomenswearPage />} />
-            <Route path="/shop/menswear" element={<MenswearPage />} />
-            <Route path="/shop/kids" element={<KidsPage />} />
-            <Route path="/shop/accessories" element={<AccessoriesPage />} />
-            <Route path="/collections" element={<CollectionPage />} />
-            <Route path="/new-arrivals" element={<NewArrivals />} />
-            <Route path="/sale" element={<SalePage />} />
-            <Route path="/gift-card" element={<GiftCardPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/:id" element={<BlogDetail />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path ="/terms-of-service" element = {<TermsOfService/>}/>
-            <Route path ="/privacy-policy" element = {<PrivacyPolicy/>}/>
-            
-            {/* Dynamic route for the Product Detail Page */}
-            <Route path="/product/:id" element={<ProductDetailPage />} />
-          </Routes>
-        </main>
+          {/* flex-grow ensures the footer stays at the bottom of short pages */}
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Homepage />} />
+              <Route path="/shop" element={<CategorySection />} />
+              <Route path="/shop/all" element={<ShopPage />} />
+              <Route path="/shop/womenswear" element={<WomenswearPage />} />
+              <Route path="/shop/menswear" element={<MenswearPage />} />
+              <Route path="/shop/kids" element={<KidsPage />} />
+              <Route path="/shop/accessories" element={<AccessoriesPage />} />
+              <Route path="/collections" element={<CollectionPage />} />
+              <Route path="/new-arrivals" element={<NewArrivals />} />
+              <Route path="/sale" element={<SalePage />} />
+              <Route path="/gift-card" element={<GiftCardPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:id" element={<BlogDetail />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path = "/checkout" element={<CheckoutPage />} />
+              
+              {/* Dynamic route for the Product Detail Page */}
+              <Route path="/product/:id" element={<ProductDetailPage />} />
+            </Routes>
+          </main>
 
-        {/* Footer stays at the bottom */}
-
-        
-             <Footer/>
-        
-      </div>
+          {/* Footer stays at the bottom */}
+          <Footer />
+          
+        </div>
+      </CartProvider>
     </Router>
   )
 }
 
-export default App
+export default App;

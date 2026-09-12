@@ -2,12 +2,17 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ShoppingBag, ChevronDown, Menu, X, MapPin, Phone, Mail, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCarts } from "../context/CartContext";
+
 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState("HOME");
   const [isShopHovered, setIsShopHovered] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobileShopOpen, setIsMobileShopOpen] = useState(false);
+
+  // Cart Context එකෙන් අපිට ඕන දේවල් ගන්නවා
+  const { cartCount, setIsCartOpen } = useCarts();
 
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
@@ -138,11 +143,19 @@ const Navbar = () => {
               <Search size={20} strokeWidth={1.5} />
             </button>
 
-            <button className="relative text-[#1A1A1A] transition-opacity duration-300 hover:opacity-60 group">
+            {/* Shopping Bag Button - CONNECTED TO CART CONTEXT */}
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative text-[#1A1A1A] transition-opacity duration-300 hover:opacity-60 group"
+            >
               <ShoppingBag size={20} strokeWidth={1.5} />
-              <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#1A1A1A] text-[9px] font-bold text-white transition-transform duration-300 group-hover:scale-110">
-                0
-              </span>
+              
+              {/* Only show badge if cart has items */}
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-none bg-[#3d352e] text-[9px] font-bold text-white transition-transform duration-300 group-hover:scale-110">
+                  {cartCount}
+                </span>
+              )}
             </button>
 
             {/* Menu Toggle Button */}
