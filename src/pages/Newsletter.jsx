@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail } from 'lucide-react';
+import { Mail, ArrowRight } from 'lucide-react';
 
 const Newsletter = () => {
   // Animation variants for a smooth, staggered reveal
@@ -22,59 +22,81 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="w-full bg-white py-24 px-6 md:px-12 font-sans flex justify-center items-center">
+    <section className="w-full bg-[#FBFBFA] border-y border-[#C4BEB6]/30 py-24 px-6 md:px-12 font-sans flex justify-center items-center overflow-hidden">
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
-        className="max-w-2xl w-full flex flex-col items-center text-center"
+        className="max-w-3xl w-full flex flex-col items-center text-center"
       >
+        
+        {/* Luxury Overline */}
+        <motion.span 
+          variants={itemVariants}
+          className="text-[10px] md:text-xs font-bold tracking-[0.25em] text-[#3d352e] uppercase mb-4"
+        >
+          The Lustre Archive
+        </motion.span>
         
         {/* Main Heading */}
         <motion.h2 
           variants={itemVariants}
-          className="text-2xl md:text-3xl lg:text-[2rem] font-medium text-[#1A1A1A] leading-snug mb-4"
+          className="text-4xl md:text-5xl lg:text-6xl font-black text-[#1A1A1A] uppercase tracking-tighter leading-[0.9] mb-6"
         >
-          Join our mailing list to stay informed about <br className="hidden md:block" />
-          exciting new releases and updates!
+          Join The <br className="hidden md:block" />
+          Inner Circle.
         </motion.h2>
         
+        <motion.div 
+          variants={itemVariants}
+          className="h-[2px] w-12 bg-[#3d352e] mb-6"
+        />
+
         {/* Subheading */}
         <motion.p 
           variants={itemVariants}
-          className="text-xs md:text-sm text-[#1A1A1A]/50 font-medium mb-10 max-w-lg"
+          className="text-sm md:text-base text-[#1A1A1A]/70 font-medium mb-10 max-w-md leading-relaxed"
         >
-          Sign up for Lustre updates and be the first to know about new arrivals, exclusive offers, and promotions!
+          Sign up for Lustre updates and be the first to know about new editorial arrivals, exclusive collections, and bespoke promotions.
         </motion.p>
         
-        {/* Input and Button Container */}
+        {/* Sharp Edge Form Container */}
         <motion.form 
           variants={itemVariants}
-          className="relative w-full max-w-lg flex items-center"
+          className="relative w-full max-w-xl flex flex-col sm:flex-row shadow-xl"
           onSubmit={(e) => e.preventDefault()}
         >
-          {/* Mail Icon */}
-          <div className="absolute left-6 text-[#1A1A1A]/40 pointer-events-none z-10">
-            <Mail size={20} strokeWidth={1.5} />
+          {/* Input Area */}
+          <div className="relative flex-grow flex">
+            <div className="absolute left-5 top-0 bottom-0 flex items-center justify-center text-[#1A1A1A]/40 pointer-events-none z-10">
+              <Mail size={18} strokeWidth={1.5} />
+            </div>
+            
+            <input 
+              type="email" 
+              placeholder="Enter your email address" 
+              required
+              className="w-full bg-white text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 text-sm font-medium py-5 pl-14 pr-4 rounded-none outline-none border border-[#C4BEB6]/60 border-b-0 sm:border-b sm:border-r-0 focus:border-[#3d352e] transition-colors"
+            />
           </div>
           
-          {/* Email Input - Using a soft wash of Warm Beige for the background */}
-          <input 
-            type="email" 
-            placeholder="Enter Your Email" 
-            required
-            className="w-full bg-[#E9E3DB]/40 text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 text-sm font-medium py-4 pl-14 pr-36 rounded-2xl outline-none focus:bg-[#E9E3DB]/70 transition-colors border border-transparent focus:border-[#C4BEB6]"
-          />
-          
-          {/* Subscribe Button */}
+          {/* Subscribe Button (Sharp & Brown) */}
           <button 
             type="submit"
-            className="absolute right-2 top-2 bottom-2 bg-[#1A1A1A] text-[#E9E3DB] px-6 md:px-8 rounded-xl text-sm font-bold tracking-wide hover:bg-[#1A1A1A]/80 transition-colors shadow-sm"
+            className="group flex items-center justify-center gap-3 bg-[#3d352e] text-[#E9E3DB] px-8 py-5 text-xs font-bold tracking-[0.2em] uppercase rounded-none border border-[#3d352e] hover:bg-[#1A1A1A] hover:border-[#1A1A1A] transition-all whitespace-nowrap"
           >
             Subscribe
+            <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" strokeWidth={2} />
           </button>
         </motion.form>
+
+        <motion.p 
+          variants={itemVariants}
+          className="text-[9px] text-[#1A1A1A]/40 font-bold tracking-widest uppercase mt-6"
+        >
+          By subscribing, you agree to our Terms of Service.
+        </motion.p>
 
       </motion.div>
     </section>
