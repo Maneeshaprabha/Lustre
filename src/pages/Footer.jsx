@@ -80,7 +80,7 @@ const Footer = () => {
                 {column.links.map((link, linkIdx) => (
                   <motion.li key={linkIdx} variants={itemVariants}>
                     <a 
-                      href={`#${link.toLowerCase().replace(/\s+/g, '-')}`}
+                      href={`${link.toLowerCase().replace(/\s+/g, '-')}`}
                       className="text-sm text-[#E9E3DB]/70 hover:text-[#E9E3DB] transition-colors duration-300 relative group inline-block"
                     >
                       {link}

@@ -18,6 +18,8 @@ import GiftCardPage from './Category/GiftCardPage';
 import BlogPage from './Category/BlogPage';
 import BlogDetail from './Category/BlogDetail';
 import ContactPage from './Category/ContactPage';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 // Import the PDP
 
 function App() {
@@ -45,6 +47,8 @@ function App() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path ="/terms-of-service" element = {<TermsOfService/>}/>
+            <Route path ="/privacy-policy" element = {<PrivacyPolicy/>}/>
             
             {/* Dynamic route for the Product Detail Page */}
             <Route path="/product/:id" element={<ProductDetailPage />} />
