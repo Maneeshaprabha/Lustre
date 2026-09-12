@@ -3,10 +3,15 @@ import { motion } from 'framer-motion';
 import { Star, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { useCarts } from '../context/CartContext';
+
 const Recommendations = () => {
   // Reference for the scrolling container
   const sliderRef = useRef(null);
   const navigate = useNavigate();
+  
+  // Cart Context එකෙන් addToCart එක ගන්නවා
+  const { addToCart } = useCarts();
 
   // Scroll handler for the custom arrows
   const scroll = (direction) => {
@@ -22,53 +27,82 @@ const Recommendations = () => {
       id: 1,
       name: 'Oversized Linen Blazer',
       category: 'Outerwear',
-      price: '145.00',
+      price: 145.00,
       rating: 5.0,
       reviews: '1.2k',
       image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=800&auto=format&fit=crop',
-      isNew: true
+      isNew: true,
+      sizes: ['S', 'M', 'L'], // Default sizes for cart
+      colors: [{ name: 'Onyx Black', hex: '#1A1A1A' }] // Default colors for cart
     },
     {
       id: 2,
       name: 'Pleated Wide-Leg Trouser',
       category: 'Bottoms',
-      price: '89.90',
+      price: 89.90,
       rating: 4.8,
       reviews: '850',
       image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop',
-      isNew: false
+      isNew: false,
+      sizes: ['S', 'M', 'L'],
+      colors: [{ name: 'Warm Sand', hex: '#E9E3DB' }]
     },
     {
       id: 3,
       name: 'Ribbed Silk Turtleneck',
       category: 'Knitwear',
-      price: '110.00',
+      price: 110.00,
       rating: 4.9,
       reviews: '2.1k',
       image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=800&auto=format&fit=crop',
-      isNew: false
+      isNew: false,
+      sizes: ['S', 'M', 'L'],
+      colors: [{ name: 'Heather Gray', hex: '#BDBDBD' }]
     },
     {
       id: 4,
       name: 'Leather Crossbody Bag',
       category: 'Accessories',
-      price: '220.00',
+      price: 220.00,
       rating: 5.0,
       reviews: '3.4k',
       image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800&auto=format&fit=crop',
-      isNew: true
+      isNew: true,
+      sizes: ['One Size'],
+      colors: [{ name: 'Rich Brown', hex: '#3d352e' }]
     },
     {
       id: 5,
       name: 'Classic Cotton Trench',
       category: 'Outerwear',
-      price: '195.00',
+      price: 195.00,
       rating: 4.7,
       reviews: '412',
       image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=800&auto=format&fit=crop',
-      isNew: false
+      isNew: false,
+      sizes: ['S', 'M', 'L'],
+      colors: [{ name: 'Warm Sand', hex: '#E9E3DB' }]
     }
   ];
+
+  // Cart එකට දාන function එක
+  const handleAddToCart = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation(); // Link එක click වෙන එක නවත්තන්න
+    
+    // Default size 'M' තියෙනවද බලනවා, නැත්තම් තියෙන පළවෙනි size එක ගන්නවා
+    const defaultSize = product.sizes.includes('M') ? 'M' : product.sizes[0];
+    const defaultColor = product.colors[0];
+
+    addToCart(product, defaultSize, defaultColor);
+  };
+
+  // Product Page එකට යන function එක
+  const handleBuyNow = (e, productId) => {
+    e.preventDefault();
+    e.stopPropagation(); // Link එක click වෙන එක නවත්තන්න
+    navigate(`/product/${productId}`);
+  };
 
   return (
     <section className="w-full bg-white py-16 md:py-24 px-6 md:px-12 font-sans antialiased overflow-hidden border-t border-[#C4BEB6]/30">
@@ -105,10 +139,6 @@ const Recommendations = () => {
 
         {/* Horizontal Scrolling Slider */}
         <div className="relative w-full">
-          {/* 
-            Hide scrollbar CSS is applied inline. 
-            Ensure standard behavior using tailwind snap classes.
-          */}
           <div 
             ref={sliderRef}
             className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-8 pb-10 hide-scrollbar"
@@ -149,7 +179,7 @@ const Recommendations = () => {
                         {product.name}
                       </h3>
                       <span className="text-sm font-medium text-[#1A1A1A] shrink-0">
-                        ${product.price}
+                        ${product.price.toFixed(2)}
                       </span>
                     </div>
                     
@@ -164,20 +194,14 @@ const Recommendations = () => {
                 {/* Sharp Box Dual Action Buttons */}
                 <div className="flex gap-2 mt-5 w-full">
                   <button 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      console.log(`Added ${product.name} to cart`);
-                    }}
+                    onClick={(e) => handleAddToCart(e, product)}
                     className="flex-1 py-3 border border-[#1A1A1A] text-[#1A1A1A] text-[9px] md:text-[10px] font-bold tracking-[0.15em] uppercase hover:bg-[#1A1A1A] hover:text-white transition-colors text-center rounded-none"
                   >
                     Add to Cart
                   </button>
                   <button 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate(`/product/${product.id}`);
-                    }}
-                    className="flex-1 py-3 bg-[#1A1A1A] border border-[#1A1A1A] text-white text-[9px] md:text-[10px] font-bold tracking-[0.15em] uppercase hover:bg-white hover:text-[#1A1A1A] transition-colors text-center rounded-none"
+                    onClick={(e) => handleBuyNow(e, product.id)}
+                    className="flex-1 py-3 bg-[#3d352e] border border-[#3d352e] text-white text-[9px] md:text-[10px] font-bold tracking-[0.15em] uppercase hover:bg-[#1A1A1A] hover:border-[#1A1A1A] transition-colors text-center rounded-none"
                   >
                     Buy Now
                   </button>
